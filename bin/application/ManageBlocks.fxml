@@ -12,7 +12,7 @@
 
 <AnchorPane fx:id="updateToggle" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="615.0" prefWidth="889.0" style="-fx-background-color: #292929;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.ManageBlocksController">
    <children>
-      <GridPane fx:id="gridPane" hgap="8.0" layoutX="98.0" layoutY="56.0" prefHeight="453.0" prefWidth="719.0" vgap="8.0">
+      <GridPane fx:id="gridPane" hgap="8.0" layoutX="95.0" layoutY="72.0" prefHeight="453.0" prefWidth="719.0" vgap="8.0">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -25,7 +25,7 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
       </GridPane>
-      <HBox layoutX="320.0" layoutY="524.0" prefHeight="60.0" prefWidth="288.0" spacing="20.0">
+      <HBox layoutX="320.0" layoutY="541.0" prefHeight="60.0" prefWidth="288.0" spacing="20.0">
          <children>
             <Button mnemonicParsing="false" onAction="#onAddClick" prefHeight="35.0" prefWidth="71.0" style="-fx-background-color: #303030;" text="Add" textFill="WHITE">
                <font>

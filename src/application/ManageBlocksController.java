@@ -1,29 +1,41 @@
 package application;
 
+import java.io.IOException;
 import java.net.URL;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+
+//TODO: Fixing timeStamp
+//TODO: Give Timestamps already in a combo box
 
 public class ManageBlocksController implements Initializable {
-
-	//TODO: Dynamic gridPane with scrollPane
 	
-	@FXML
-	GridPane gridPane;
 	@FXML
 	ToggleButton removeToggle;
 	@FXML
 	ToggleButton updatseToggle;
+	@FXML 
+	GridPane gridPane;
 	
+	private ArrayList<BlockDS> data = new ArrayList<BlockDS>();
+		
 	//This will return the remove toggle status to BLOCK_BUTTONS
 	public boolean getRemoveToggleStatus() { return removeToggle.isSelected();}
 	//This will return the update toggle status to BLOCK_BUTTONS
 	public boolean getUpdateToggleStatus() { return updatseToggle.isSelected();}
-	
 	
 	//Highlights toggled button .. depending on the source of the event
 	public void onToggleClick(ActionEvent e) {
@@ -35,24 +47,63 @@ public class ManageBlocksController implements Initializable {
 		}
 	}
 	
-	//TODO: Implement Add
-	public void onAddClick(ActionEvent e) {
-	}
-	
-	@Override
-	public void initialize(URL arg0, ResourceBundle arg1) {
-				
-		//This is basically intializing the gridPane with the blocks
-		String data[] = {"A","B","C","D","E","F","G","H","I","J","K","L"};
+	public void loadGridPane() throws SQLException {	
+		
+		//RESETING
+		gridPane.getChildren().clear();
+		data.clear();
+		
+		ResultSet result = LoginController.getSQL().executeQuery("select block,blockcapacity,movietitle,movierating from movieblock,movie "
+																 + "where movieblock.movieid = movie.movieid");
+		while(result.next()) {
+			String block = result.getString(1);
+			int capacity = result.getInt(2);
+			String movietitle = result.getString(3);
+			float rating = result.getFloat(4);
+			data.add(new BlockDS(gridPane,block,movietitle,capacity,rating,0));
+		}
+		
 		int r = 0 , c = 0;
-		for(int i = 0; i <= data.length-1; i++) {
-			if(c <= 4) { //inserting buttons to our gridPane with our data
-				gridPane.add(new BlockButtons(new BlockDS(gridPane,data[i],"spiderman",90,0),this), c, r);
+		for(int i = 0; i <= data.size()-1; i++) {
+			if(c <= 4) {
+				gridPane.add(new BlockButtons(data.get(i),this), c, r);
 				c++;
 			} if (c==4) { 
 				c = 0; 
 				r++; 
 			}
+		}
+	}
+	
+	//Adding shit
+	public void onAddClick(ActionEvent e) throws SQLException {
+		try {
+			//Passing our stageInstnace to our controller
+			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("AddBlocks.fxml"));
+			AddBlocksController controller = new AddBlocksController();
+			fxmlLoader.setController(controller);
+		    Parent root1 = (Parent) fxmlLoader.load();
+		    Stage stage = new Stage();
+		    stage.setScene(new Scene(root1));
+		    
+		    controller.stageInstance = stage; //Passing our instance to the controller
+		    controller.mbcInst = this; //Passing our controller instance
+		    
+		    //This allows only one instance to be created until the current is not closed
+		    stage.initModality(Modality.APPLICATION_MODAL);
+	        stage.initStyle(StageStyle.UNDECORATED);
+		    stage.show();	
+		} catch (IOException e1) {
+			System.out.println("[ERROR @ Update Blocks: (loading update blocks fxml] " + e1);
+		}
+	}
+		
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) {	
+		try {
+			loadGridPane();
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 	}
 }

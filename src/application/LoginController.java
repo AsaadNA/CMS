@@ -16,7 +16,7 @@ import javafx.scene.layout.AnchorPane;
 
 public class LoginController implements Initializable {
 	
-	private SQLController sqlController;
+	private static SQLController sqlController;
 	
 	@FXML
 	TextField userField;
@@ -26,6 +26,8 @@ public class LoginController implements Initializable {
 	AnchorPane pane;
 	
 	private double xOffset = 0 , yOffset = 0; //Borderless window
+	
+	public static SQLController getSQL() { return sqlController; }
 	
 	//This is the login button controller
 	//which will instantitate the main stage if the credentials are correct
@@ -38,7 +40,7 @@ public class LoginController implements Initializable {
 		} else { 
 			System.out.println("[LOG @ LoginController] : Login successful");			
             ((Node)(e.getSource())).getScene().getWindow().hide();
-            if(sqlController.closeConnection()) System.out.println("[LOG @ LoginController] : Login connection closed");
+			@SuppressWarnings("unused")
 			Main main = new Main();
 		}
 	}

@@ -1,10 +1,11 @@
 package application;
 
+import java.sql.SQLException;
+
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
@@ -24,7 +25,7 @@ public class BlockButtons extends Button {
 		
 		//generating the custom tool-tip
 		Tooltip tt = new Tooltip();
-		tt.setText("Block: " + getText() + "\n" + "Movie: " + "SpiderMan: Homecoming\nDuration: 90 mins\nRating: 9.0");
+		tt.setText("Block: " + info.block + "\nMovie: "+ info.movie_name +"\n" +"Rating: " + info.rating + "\nCapcity: " + info.capacity);
 		tt.setStyle("-fx-font: normal bold 20 Langdon; "
 		    + "-fx-background-color: #292929; "
 		    + "-fx-text-fill: white;");
@@ -36,13 +37,23 @@ public class BlockButtons extends Button {
 		//depending on remove toggle or updateToggle
 		//it has the ManagerBlocksController's Instance to 
 		//check status of the toggles
+		
 		this.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			public void handle(MouseEvent e) {
 				if(mbcInst.getRemoveToggleStatus()) {
 					info.pane.getChildren().remove((Button)e.getSource());
+					LoginController.getSQL().executeQuery("DELETE FROM movieblock where block='"+info.block+"'");
+					//Reloading the gridPane with updated shit
+					try {
+						mbcInst.loadGridPane();
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				} if (mbcInst.getUpdateToggleStatus()) {
 					//Create a new instantiation of update blocks to give info
-					UpdateBlocks ubInst = new UpdateBlocks(info);
+					@SuppressWarnings("unused")
+					UpdateBlocks ubInst = new UpdateBlocks(info,mbcInst);
 				}
 			} 
 		});

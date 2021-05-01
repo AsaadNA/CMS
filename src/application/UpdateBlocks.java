@@ -1,8 +1,8 @@
 package application;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -10,26 +10,24 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.stage.WindowEvent;
 
-//THIS IS AN ADT TO CONVEY THE INFO TO THE 
-//CONTROLLER OF UPDATE BLOCKS
-//This DATA STRUCTURE USED FOR BLOCK BUTTONS AND ALSO FOR GIVING THE INFO TO UPDATE BLOCKS WINDOW
 class BlockDS {
 	
 	public String block;
 	public String movie_name;
 	public int capacity;
 	public int time;
+	public float rating;
 	
 	public GridPane pane;
 	
-	public BlockDS(GridPane pane,String block , String movie_name , int capacity , int time) {
+	public BlockDS(GridPane pane,String block , String movie_name , int capacity , float rating , int time) {
 		this.block = block;
 		this.movie_name = movie_name;
 		this.capacity = capacity;
 		this.time = time;
 		this.pane = pane;
+		this.rating = rating;
 	}
 }
 
@@ -38,11 +36,23 @@ public class UpdateBlocks {
 	private static Stage stage;
 	private static BlockDS updateBlockDS; //access for controller
 	
+	private static ManageBlocksController mbcInst;
+	
 	public static Stage getStage() { return stage; }
 	public static BlockDS getDataStructure() { return updateBlockDS; }
 	
-	public UpdateBlocks(BlockDS ds) {
+	public static void refreshGridPane() {
+		try {
+			mbcInst.loadGridPane();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+	}
+	
+	public UpdateBlocks(BlockDS ds , ManageBlocksController mbcInst) {
 		
+		UpdateBlocks.mbcInst = mbcInst;
 		updateBlockDS = ds; //takes in info
 		
 		try {

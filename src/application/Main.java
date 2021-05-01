@@ -16,6 +16,7 @@ public class Main {
 	
 	//Instantiating the stage
 	public Main() {
+				
 		Parent root = null;
 		try {
 			root = FXMLLoader.load(getClass().getResource("Main.fxml"));
