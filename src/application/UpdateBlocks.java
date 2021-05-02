@@ -2,6 +2,7 @@ package application;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -10,26 +11,6 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-
-class BlockDS {
-	
-	public String block;
-	public String movie_name;
-	public int capacity;
-	public int time;
-	public float rating;
-	
-	public GridPane pane;
-	
-	public BlockDS(GridPane pane,String block , String movie_name , int capacity , float rating , int time) {
-		this.block = block;
-		this.movie_name = movie_name;
-		this.capacity = capacity;
-		this.time = time;
-		this.pane = pane;
-		this.rating = rating;
-	}
-}
 
 public class UpdateBlocks {
 		

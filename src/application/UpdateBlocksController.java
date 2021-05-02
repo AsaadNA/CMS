@@ -33,11 +33,11 @@ public class UpdateBlocksController implements Initializable {
 	//Here we handle update window closing
 	public void onUpdateClick(ActionEvent e) {
 		
-		String block = UpdateBlocks.getDataStructure().block;
-		String movie = movieBox.getValue().toString();
-		int movieid = movie_hashMap.get(movie);
+		//String block = UpdateBlocks.getDataStructure().block;
+		//String movie = movieBox.getValue().toString();
+		//int movieid = movie_hashMap.get(movie);
 		
-		LoginController.getSQL().executeQuery("UPDATE movieblock set movieid="+movieid+" where block='"+block+"'");
+		//LoginController.getSQL().executeQuery("UPDATE movieblock set movieid="+movieid+" where block='"+block+"'");
 		
 		//refresh the gridpane
 		UpdateBlocks.refreshGridPane();

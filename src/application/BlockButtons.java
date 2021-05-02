@@ -1,14 +1,44 @@
 package application;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
+
+class MovieDS {
+	String movieTitle;
+	float movieRating;
+	int movieDuration;
+	int movieTimeStamp;
+	
+	public MovieDS(String movieTitle,float movieRating,int movieDuration,int movieTimeStamp) {
+		this.movieTitle = movieTitle;
+		this.movieRating = movieRating;
+		this.movieDuration = movieDuration;
+		this.movieTimeStamp = movieTimeStamp;
+	}
+}
+
+class BlockDS {
+	
+	public String block;
+	public ArrayList<MovieDS> scheduledMovies = new ArrayList<MovieDS>();
+	public GridPane pane;
+	
+	public BlockDS() {}
+	public BlockDS(GridPane pane,String block,ArrayList<MovieDS> scheduledMovies) {
+		this.pane = pane;
+		this.block = block;
+		this.scheduledMovies = scheduledMovies;
+	}
+}
 
 public class BlockButtons extends Button {
 	
@@ -25,7 +55,14 @@ public class BlockButtons extends Button {
 		
 		//generating the custom tool-tip
 		Tooltip tt = new Tooltip();
-		tt.setText("Block: " + info.block + "\nMovie: "+ info.movie_name +"\n" +"Rating: " + info.rating + "\nCapcity: " + info.capacity);
+		
+		String toolTipText = "Block: " + info.block + "\n";
+		for(int i = 0; i <= info.scheduledMovies.size()-1; i++) {
+			toolTipText += "------ Time Slot " + " : " + info.scheduledMovies.get(i).movieTimeStamp + " ------\n";
+			toolTipText += "Movie " + " : " + info.scheduledMovies.get(i).movieTitle + "\n";
+		}
+		
+		tt.setText(toolTipText);
 		tt.setStyle("-fx-font: normal bold 20 Langdon; "
 		    + "-fx-background-color: #292929; "
 		    + "-fx-text-fill: white;");
@@ -37,7 +74,7 @@ public class BlockButtons extends Button {
 		//depending on remove toggle or updateToggle
 		//it has the ManagerBlocksController's Instance to 
 		//check status of the toggles
-		
+		/*
 		this.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			public void handle(MouseEvent e) {
 				if(mbcInst.getRemoveToggleStatus()) {
@@ -56,6 +93,6 @@ public class BlockButtons extends Button {
 					UpdateBlocks ubInst = new UpdateBlocks(info,mbcInst);
 				}
 			} 
-		});
+		}); */
 	}
 }

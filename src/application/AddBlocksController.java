@@ -21,26 +21,28 @@ public class AddBlocksController implements Initializable {
 	@FXML
 	AnchorPane pane;
 	@FXML
-	ComboBox<String> movieBox;
-	@FXML
 	ComboBox<String> blockBox;
 	@FXML
-	Button addButton;
+	ComboBox<String> timeBox;
+	@FXML 
+	ComboBox<String> movieBox;
+	@FXML
+	Button addSlot;
+	@FXML
+	Button doneButton;
 	
-	private HashMap<String,Integer> movie_hashMap = new HashMap<String,Integer>();
-	
+	private HashMap<String,Integer> block_hashMap = new HashMap<String,Integer>(); //block, blockid
+	private HashMap<String,Integer> movie_hashMap = new HashMap<String,Integer>(); //movietitle,movieid
+	private HashMap<Integer,Integer> timestamp_hashMap = new HashMap<Integer,Integer>(); //timestamp,timestampID
+
+	ArrayList<String> resultListTIME = new ArrayList<String>();
+
 	//Our passed instances
-	public Stage stageInstance;
-	public ManageBlocksController mbcInst;
+	public Stage stageInstance; //These are passed while instantiating the ADD BLOCK CONTROLLER
+	public ManageBlocksController mbcInst; //These are passed while instantiating the ADD BLOCK CONTROLLER
 	
-	public void onAddClick(ActionEvent e) {
-		String block = blockBox.getValue().toString();
-		String movie = movieBox.getValue().toString();
-		
-		int movieid = movie_hashMap.get(movie); 
-		LoginController.getSQL().executeQuery("INSERT INTO MOVIEBLOCK (movieid,block) values "
-					+ "(" + movieid + ",'" + block + "')");
-		
+	//When done is clicked .. it will reload the girdPane for the updated data
+	public void onDoneClick(ActionEvent e) {
 		//Reload the grid using the passed instance
 		try {
 			mbcInst.loadGridPane();
@@ -50,6 +52,54 @@ public class AddBlocksController implements Initializable {
 		}
 		
 		stageInstance.close(); //close the Add blocks stage
+	}
+	
+	//This will update time slot combo box with unslotted time for a specific block from the movieblocktime table
+	private void updateTimeComboBox(String block) throws SQLException {
+		String query = "select timestamp from movie,movieblock,timestamps,movieblocktime where movieblocktime.blockid = movieblock.blockid and movieblocktime.timestampid = timestamps.timestampid and movieblocktime.movieid = movie.movieid and movieblock.block ="+"'" + block + "'";
+		ResultSet result = LoginController.getSQL().executeQuery(query);
+		while(result.next()) {
+			resultListTIME.remove(Integer.toString(result.getInt(1)));
+		} timeBox.setItems(FXCollections.observableArrayList(resultListTIME));
+	}
+	
+	public void onAddSlotClick(ActionEvent e) throws SQLException {	
+		
+		String time = timeBox.getValue().toString();
+		String movie = movieBox.getValue().toString();
+		String block = blockBox.getValue().toString();
+		
+		Integer timeID = timestamp_hashMap.get(Integer.parseInt(time));
+		Integer movieID = movie_hashMap.get(movie);
+		Integer blockID = block_hashMap.get(block);
+		
+		ResultSet result = LoginController.getSQL().executeQuery("SELECT block from MOVIEBLOCK where block='"+block+"'");
+		if(!result.next()) {
+			
+			//1. Insert new block to the movieblock table
+			LoginController.getSQL().executeQuery("INSERT INTO MOVIEBLOCK (block) values ('"+block+"')");
+			
+			//2. Retrieve the id of the block
+			result = LoginController.getSQL().executeQuery("SELECT blockid from MOVIEBLOCK where block='"+block+"'");
+			while(result.next()) { blockID = result.getInt(1); }
+			
+			//2.5 put the key,value pair to block
+			block_hashMap.put(block, blockID);
+					
+			//3. Insert the slot given into the table
+			LoginController.getSQL().executeQuery("INSERT INTO MOVIEBLOCKTIME (timeStampID,blockID,movieID) VALUES ("+ timeID + ","+blockID+","+movieID+")");
+			
+			//4. Update the time combo box
+			updateTimeComboBox(block);
+					
+			blockBox.setDisable(true);
+			
+		} else {
+			//3. Insert the slot given into the table
+			LoginController.getSQL().executeQuery("INSERT INTO MOVIEBLOCKTIME (timeStampID,blockID,movieID) VALUES ("+ timeID + ","+blockID+","+movieID+")");
+			//4. Update the time combo box
+			updateTimeComboBox(block);
+		}
 	}
 		
 	@Override
@@ -72,14 +122,27 @@ public class AddBlocksController implements Initializable {
 		
 		/* POPULATING BLOCKS WHICH ARE NOT USED ALREADY */
 		
-		result = LoginController.getSQL().executeQuery("SELECT block from MOVIEBLOCK");
+		result = LoginController.getSQL().executeQuery("SELECT blockid, block from MOVIEBLOCK");
 		try {
 			while(result.next()) {
-				resultList.remove(result.getString(1));
+				resultList.remove(result.getString(2));
+				block_hashMap.put(result.getString(2),result.getInt(1));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}  blockBox.setItems(FXCollections.observableArrayList(resultList));
+		
+		/* POPULATING TIME */
+		
+		result = LoginController.getSQL().executeQuery("SELECT timestampid, timestamp from TIMESTAMPS");
+		try {
+			while(result.next()) {
+				resultListTIME.add(Integer.toString(result.getInt(2)));
+				timestamp_hashMap.put(result.getInt(2),result.getInt(1));
+			}
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} timeBox.setItems(FXCollections.observableArrayList(resultListTIME));
 		
 		/* POPULATING MOVIES */
 		
@@ -93,5 +156,6 @@ public class AddBlocksController implements Initializable {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} movieBox.setItems(FXCollections.observableArrayList(resultList));
+		
 	}
 }

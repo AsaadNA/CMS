@@ -18,8 +18,15 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+//Adding blocks
+//Retrieving movies assigned to each block
+//Updating the blocks
+
+//TODO: Instead of creating a new window for the add blocks etc why dont we just change the scene and add a cancel button to it
+//TODO: ADD an AM and PM Column in TimeStamp table
+
 //TODO: Fixing timeStamp
-//TODO: Give Timestamps already in a combo box
+//TODO: Searching / Filtering options
 
 public class ManageBlocksController implements Initializable {
 	
@@ -49,20 +56,34 @@ public class ManageBlocksController implements Initializable {
 	
 	public void loadGridPane() throws SQLException {	
 		
-		//RESETING
 		gridPane.getChildren().clear();
 		data.clear();
 		
-		ResultSet result = LoginController.getSQL().executeQuery("select block,blockcapacity,movietitle,movierating from movieblock,movie "
-																 + "where movieblock.movieid = movie.movieid");
-		while(result.next()) {
-			String block = result.getString(1);
-			int capacity = result.getInt(2);
-			String movietitle = result.getString(3);
-			float rating = result.getFloat(4);
-			data.add(new BlockDS(gridPane,block,movietitle,capacity,rating,0));
-		}
+		SQLController sql = LoginController.getSQL();
+		String query1 = "select block from movieblock order by block";
+		ResultSet result1 = sql.executeQuery(query1);
 		
+		while(result1.next()) {
+			
+			ArrayList<MovieDS> movieList = new ArrayList<MovieDS>();
+			BlockDS newData = new BlockDS();
+			String query2 = "select movietitle,movierating,movieduration,timestamp from movie,movieblock,timestamps,movieblocktime where movieblocktime.blockid = movieblock.blockid and movieblocktime.timestampid = timestamps.timestampid and movieblocktime.movieid = movie.movieid and movieblock.block ="+"'" + result1.getString(1) + "' order by timestamp";
+			ResultSet result2 = sql.executeQuery(query2);
+			while(result2.next()) {
+				
+				String movieTitle = result2.getString(1);
+				float movieRating = result2.getFloat(2);
+				int movieduration = result2.getInt(3);
+				int timestamp = result2.getInt(4);
+				
+				movieList.add(new MovieDS(movieTitle,movieRating,movieduration,timestamp));
+			} 
+			
+			newData.block = result1.getString(1);
+			newData.scheduledMovies = movieList;
+			data.add(newData);
+		}
+				
 		int r = 0 , c = 0;
 		for(int i = 0; i <= data.size()-1; i++) {
 			if(c <= 4) {
@@ -72,7 +93,7 @@ public class ManageBlocksController implements Initializable {
 				c = 0; 
 				r++; 
 			}
-		}
+		} 
 	}
 	
 	//Adding shit
