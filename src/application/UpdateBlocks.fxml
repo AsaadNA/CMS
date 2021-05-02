@@ -6,18 +6,29 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="anchor" prefHeight="193.0" prefWidth="264.0" style="-fx-background-color: #303030;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.UpdateBlocksController">
+<AnchorPane fx:id="anchor" prefHeight="328.0" prefWidth="598.0" style="-fx-background-color: #292929;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.UpdateBlocksController">
    <children>
-      <Label layoutX="105.0" layoutY="42.0" text="Movie" textFill="WHITE">
+      <Label layoutX="137.0" layoutY="63.0" text="Currently Making Changes to Block" textFill="WHITE">
          <font>
             <Font size="19.0" />
          </font>
       </Label>
-      <Button fx:id="updateButton" layoutX="85.0" layoutY="130.0" mnemonicParsing="false" onAction="#onUpdateClick" style="-fx-background-color: #292929;" text="UPDATE" textFill="WHITE">
+      <ComboBox fx:id="timeBox_addSlot" layoutX="35.0" layoutY="137.0" prefHeight="25.0" prefWidth="169.0" />
+      <ComboBox fx:id="movieBox_addSlot" layoutX="223.0" layoutY="137.0" prefHeight="25.0" prefWidth="169.0" />
+      <Button layoutX="411.0" layoutY="137.0" mnemonicParsing="false" onAction="#onAddSlotClick" style="-fx-background-color: #303030;" text="Add slot" textFill="WHITE" />
+      <ComboBox fx:id="timeBox_otherSlot" layoutX="35.0" layoutY="182.0" prefHeight="25.0" prefWidth="169.0" />
+      <ComboBox fx:id="movieBox_otherSlot" layoutX="223.0" layoutY="182.0" prefHeight="25.0" prefWidth="169.0" />
+      <Button layoutX="405.0" layoutY="182.0" mnemonicParsing="false" onAction="#onDeleteSlotClick" style="-fx-background-color: #303030;" text="Delete slot" textFill="WHITE" />
+      <Button layoutX="493.0" layoutY="182.0" mnemonicParsing="false" onAction="#onUpdateMovieClick" style="-fx-background-color: #303030;" text="Update Movie" textFill="WHITE" />
+      <Button layoutX="276.0" layoutY="243.0" mnemonicParsing="false" onAction="#onDoneClick" style="-fx-background-color: #303030;" text="DONE" textFill="WHITE">
          <font>
-            <Font size="18.0" />
+            <Font size="20.0" />
          </font>
       </Button>
-      <ComboBox fx:id="movieBox" layoutX="45.0" layoutY="84.0" prefHeight="25.0" prefWidth="169.0" />
+      <Label fx:id="blockLabel" layoutX="442.0" layoutY="63.0" text="A" textFill="WHITE">
+         <font>
+            <Font size="19.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

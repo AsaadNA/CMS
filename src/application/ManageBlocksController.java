@@ -18,15 +18,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-//Adding blocks
-//Retrieving movies assigned to each block
-//Updating the blocks
-
 //TODO: Instead of creating a new window for the add blocks etc why dont we just change the scene and add a cancel button to it
 //TODO: ADD an AM and PM Column in TimeStamp table
-
-//TODO: Fixing timeStamp
-//TODO: Searching / Filtering options
 
 public class ManageBlocksController implements Initializable {
 	
@@ -81,6 +74,7 @@ public class ManageBlocksController implements Initializable {
 			
 			newData.block = result1.getString(1);
 			newData.scheduledMovies = movieList;
+			newData.pane = gridPane;
 			data.add(newData);
 		}
 				

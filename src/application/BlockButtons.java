@@ -13,10 +13,10 @@ import javafx.scene.text.Font;
 import javafx.util.Duration;
 
 class MovieDS {
+	
 	String movieTitle;
 	float movieRating;
-	int movieDuration;
-	int movieTimeStamp;
+	int movieDuration,movieTimeStamp;
 	
 	public MovieDS(String movieTitle,float movieRating,int movieDuration,int movieTimeStamp) {
 		this.movieTitle = movieTitle;
@@ -48,7 +48,6 @@ public class BlockButtons extends Button {
 		this.setText(info.block);
 	    this.setMaxWidth(Double.MAX_VALUE);
 	    this.setMaxHeight(Double.MAX_VALUE);
-		//this.setMaxSize(180, 151);
 		this.setFont(new Font(57));
 		this.setTextFill(Color.WHITE);
 		this.setStyle("fx-background-radius: 15px; -fx-background-color:#303030;");
@@ -74,7 +73,7 @@ public class BlockButtons extends Button {
 		//depending on remove toggle or updateToggle
 		//it has the ManagerBlocksController's Instance to 
 		//check status of the toggles
-		/*
+		
 		this.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			public void handle(MouseEvent e) {
 				if(mbcInst.getRemoveToggleStatus()) {
@@ -93,6 +92,6 @@ public class BlockButtons extends Button {
 					UpdateBlocks ubInst = new UpdateBlocks(info,mbcInst);
 				}
 			} 
-		}); */
+		});
 	}
 }
