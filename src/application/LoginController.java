@@ -35,10 +35,19 @@ public class LoginController implements Initializable {
 		String query = "SELECT * from admin where username=" + "'" + userField.getText() + "' and password='" + passwordField.getText() + "'"; 
 		ResultSet result = sqlController.executeQuery(query);
 		if(!result.next()) {
-			userField.setText("");
-			passwordField.setText("");
+			query = "SELECT * from CASHIER where cashierusername=" + "'" + userField.getText() + "' and cashierpassword='" + passwordField.getText() + "'"; 
+			result = sqlController.executeQuery(query);
+			if(!result.next()) {
+				userField.setText(""); passwordField.setText("");
+			} else {
+				System.out.println("[LOG @ LoginController] CASHIER : Login successful");			
+	            ((Node)(e.getSource())).getScene().getWindow().hide();
+				@SuppressWarnings("unused")
+				Cashier cashier = new Cashier();
+			}
+			
 		} else { 
-			System.out.println("[LOG @ LoginController] : Login successful");			
+			System.out.println("[LOG @ LoginController] ADMIN : Login successful");			
             ((Node)(e.getSource())).getScene().getWindow().hide();
 			@SuppressWarnings("unused")
 			Main main = new Main();

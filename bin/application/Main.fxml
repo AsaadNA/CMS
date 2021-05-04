@@ -13,24 +13,29 @@
          <left>
             <VBox prefHeight="615.0" prefWidth="210.0" spacing="5.0" style="-fx-background-color: #292929;" BorderPane.alignment="CENTER">
                <children>
-                  <Button contentDisplay="RIGHT" mnemonicParsing="false" onAction="#onScene1Click" prefHeight="60.0" prefWidth="210.0" style="-fx-background-color: #4d4c4c;" text="Manage Blocks" textFill="WHITE">
+                  <Button contentDisplay="RIGHT" mnemonicParsing="false" onAction="#onManageBlocksClick" prefHeight="60.0" prefWidth="210.0" style="-fx-background-color: #4d4c4c;" text="Manage Blocks" textFill="WHITE">
                      <font>
                         <Font size="18.0" />
                      </font></Button>
-                  <Button contentDisplay="RIGHT" mnemonicParsing="false" prefHeight="60.0" prefWidth="210.0" style="-fx-background-color: #4d4c4c;" text="Manage Movies" textFill="WHITE">
+                  <Button contentDisplay="RIGHT" mnemonicParsing="false" onAction="#onManageMoviesClick" prefHeight="60.0" prefWidth="210.0" style="-fx-background-color: #4d4c4c;" text="Manage Movies" textFill="WHITE">
+                     <font>
+                        <Font size="18.0" />
+                     </font></Button>
+                  <Button contentDisplay="RIGHT" mnemonicParsing="false" prefHeight="60.0" prefWidth="210.0" style="-fx-background-color: #4d4c4c;" text="Manage Timeslots" textFill="WHITE">
                      <font>
                         <Font size="18.0" />
                      </font></Button>
                   <Button contentDisplay="RIGHT" mnemonicParsing="false" prefHeight="60.0" prefWidth="210.0" style="-fx-background-color: #4d4c4c;" text="Manage Seats" textFill="WHITE">
                      <font>
                         <Font size="18.0" />
-                     </font></Button>
-                  <Button contentDisplay="RIGHT" mnemonicParsing="false" prefHeight="60.0" prefWidth="210.0" style="-fx-background-color: #4d4c4c;" text="Manage Users" textFill="WHITE">
+                     </font>
+                  </Button>
+                  <Button contentDisplay="RIGHT" mnemonicParsing="false" prefHeight="60.0" prefWidth="210.0" style="-fx-background-color: #4d4c4c;" text="Manage Cashiers" textFill="WHITE">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Button>
-                  <Button contentDisplay="RIGHT" mnemonicParsing="false" prefHeight="60.0" prefWidth="210.0" style="-fx-background-color: #4d4c4c;" text="Manage Cashiers" textFill="WHITE">
+                  <Button contentDisplay="RIGHT" mnemonicParsing="false" prefHeight="60.0" prefWidth="210.0" style="-fx-background-color: #4d4c4c;" text="Manage Users" textFill="WHITE">
                      <font>
                         <Font size="18.0" />
                      </font>
@@ -47,7 +52,7 @@
                   </Button>
                </children>
                <padding>
-                  <Insets top="85.0" />
+                  <Insets top="50.0" />
                </padding>
             </VBox>
          </left>

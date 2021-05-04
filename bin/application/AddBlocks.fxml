@@ -6,26 +6,26 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="pane" prefHeight="420.0" prefWidth="519.0" style="-fx-background-color: #292929;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="pane" prefHeight="420.0" prefWidth="519.0" style="-fx-background-color: #303030;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <ComboBox fx:id="blockBox" layoutX="165.0" layoutY="102.0" prefHeight="25.0" prefWidth="169.0" />
-      <Label layoutX="200.0" layoutY="52.0" style="-fx-background-color: #292929;" text="Select Block" textFill="WHITE">
+      <Label layoutX="200.0" layoutY="52.0" style="-fx-background-color: #303030;" text="Select Block" textFill="WHITE">
          <font>
             <Font size="19.0" />
          </font>
       </Label>
-      <Button fx:id="doneButton" layoutX="231.0" layoutY="340.0" mnemonicParsing="false" onAction="#onDoneClick" style="-fx-background-color: #303030;" text="DONE" textFill="WHITE">
+      <Button fx:id="doneButton" layoutX="231.0" layoutY="340.0" mnemonicParsing="false" onAction="#onDoneClick" style="-fx-background-color: #292929;" text="DONE" textFill="WHITE">
          <font>
             <Font size="17.0" />
          </font>
       </Button>
-      <Label layoutX="36.0" layoutY="159.0" style="-fx-background-color: #292929;" text="Select Respective Time Slots For Respective Movies" textFill="WHITE">
+      <Label layoutX="36.0" layoutY="159.0" style="-fx-background-color: #303030;" text="Select Respective Time Slots For Respective Movies" textFill="WHITE">
          <font>
             <Font size="19.0" />
          </font>
       </Label>
       <ComboBox fx:id="timeBox" layoutX="70.0" layoutY="241.0" prefHeight="25.0" prefWidth="169.0" />
       <ComboBox fx:id="movieBox" layoutX="250.0" layoutY="241.0" prefHeight="25.0" prefWidth="169.0" />
-      <Button fx:id="addSlot" layoutX="434.0" layoutY="241.0" mnemonicParsing="false" onAction="#onAddSlotClick" style="-fx-background-color: #303030;" text="Add slot" textFill="WHITE" />
+      <Button fx:id="addSlot" layoutX="434.0" layoutY="241.0" mnemonicParsing="false" onAction="#onAddSlotClick" style="-fx-background-color: #292929;" text="Add slot" textFill="WHITE" />
    </children>
 </AnchorPane>

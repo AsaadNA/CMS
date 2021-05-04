@@ -27,13 +27,22 @@ public class MainController implements Initializable {
 	}
 	
 	//This will handle the Manageblocks Button
-	public void onScene1Click(ActionEvent e) {
+	public void onManageBlocksClick(ActionEvent e) {
 		Pane manageBlocks = null;
 		try {
 			manageBlocks = getPane("ManageBlocks.fxml");
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		} borderPane.setCenter(manageBlocks);
+	}
+	
+	public void onManageMoviesClick(ActionEvent e) {
+		Pane manageMovies = null;
+		try {
+			manageMovies = getPane("ManageMovies.fxml");
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		} borderPane.setCenter(manageMovies);
 	}
 
 	@Override
