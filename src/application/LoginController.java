@@ -27,6 +27,9 @@ public class LoginController implements Initializable {
 	
 	private double xOffset = 0 , yOffset = 0; //Borderless window
 	
+	private static String user = null;
+	
+	public static String getUser() { return user; }
 	public static SQLController getSQL() { return sqlController; }
 	
 	//This is the login button controller
@@ -40,6 +43,7 @@ public class LoginController implements Initializable {
 			if(!result.next()) {
 				userField.setText(""); passwordField.setText("");
 			} else {
+				user = userField.getText();
 				System.out.println("[LOG @ LoginController] CASHIER : Login successful");			
 	            ((Node)(e.getSource())).getScene().getWindow().hide();
 				@SuppressWarnings("unused")
@@ -47,6 +51,7 @@ public class LoginController implements Initializable {
 			}
 			
 		} else { 
+			user = userField.getText();
 			System.out.println("[LOG @ LoginController] ADMIN : Login successful");			
             ((Node)(e.getSource())).getScene().getWindow().hide();
 			@SuppressWarnings("unused")

@@ -14,19 +14,19 @@
          <left>
             <VBox prefHeight="615.0" prefWidth="210.0" spacing="5.0" style="-fx-background-color: #292929;" BorderPane.alignment="CENTER">
                <children>
-                  <Button contentDisplay="RIGHT" mnemonicParsing="false" prefHeight="60.0" prefWidth="210.0" style="-fx-background-color: #4d4c4c;" text="Book Tickets" textFill="WHITE">
+                  <Button contentDisplay="RIGHT" mnemonicParsing="false" onAction="#onBookTicketsClick" prefHeight="60.0" prefWidth="210.0" style="-fx-background-color: #4d4c4c;" text="Book Tickets" textFill="WHITE">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Button>
-                  <Button contentDisplay="RIGHT" mnemonicParsing="false" prefHeight="60.0" prefWidth="210.0" style="-fx-background-color: #4d4c4c;" text="Report" textFill="WHITE">
+                  <Button contentDisplay="RIGHT" mnemonicParsing="false" prefHeight="60.0" prefWidth="210.0" style="-fx-background-color: #4d4c4c;" text="Manage Payments" textFill="WHITE">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Button>
                </children>
                <padding>
-                  <Insets top="50.0" />
+                  <Insets top="200.0" />
                </padding>
             </VBox>
          </left>

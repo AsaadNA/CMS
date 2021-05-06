@@ -1,3 +1,5 @@
+import application.bookTickets_1_TableModel;
+
 module CMS {
 	requires javafx.controls;
 	requires javafx.graphics;
@@ -6,5 +8,5 @@ module CMS {
 	requires javafx.base;
 	requires java.sql;
 
-	opens application to javafx.graphics, javafx.fxml;
+	opens application to javafx.graphics, javafx.fxml,javafx.base;
 }
