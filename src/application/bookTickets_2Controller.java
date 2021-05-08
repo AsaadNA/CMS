@@ -1,5 +1,6 @@
 package application;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -8,6 +9,7 @@ import java.util.ResourceBundle;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -51,7 +53,9 @@ public class bookTickets_2Controller implements Initializable {
 	Button purchase_submit_button;
 	@FXML
 	CheckBox userCheckBox;
-
+	@FXML
+	Label statusText;
+	
 	//Passed via bookTickets_1Controller parameter
 	public String block,movie;
 	public int timeslot;
@@ -60,6 +64,7 @@ public class bookTickets_2Controller implements Initializable {
 	private ArrayList<SeatButton> seats = new ArrayList<SeatButton>();
 	public ArrayList<SeatButton> selected_seats = new ArrayList<SeatButton>(); //accesed by SeatButton statically
 	
+	int MovieBlockTimeID = 0;
 
 	//System.out.println("Status: " + seat.isSelected + " | " +"R: " + seat.row  + " | C: " + seat.column + " | Seat Type : " + seat.seatType);
 	//On book now ask for the client info and search his/her credentials using db
@@ -77,150 +82,30 @@ public class bookTickets_2Controller implements Initializable {
 			bookNowButton.setVisible(false);
 
 			anchorPane_purchase.setVisible(true);
+		} else {
+			System.out.println("Select a seat");
 		}
 	}
 	
-	//Purchase anchorpane submit button
-	public void onPurchaseSubmit(ActionEvent e) throws SQLException {
-		
-		//get ID of movieblocktime with ID of block,movie,timeslot
-		int MovieBlockTimeID = 0;
-		int blockID = 0;
-		int movieID = 0;
-		int timestampID = 0;
-		int clientID = 0;
-
-		//SQL stuff here
+	public void alreadyClientClick(ActionEvent e) {
 		if(userCheckBox.isSelected()) {
-			
-			/* If it's an old user use the first name and phone number to get the client id */
-			
-			String firstName = firstName_textField.getText();
-			long phoneNumber = Integer.parseInt(phoneNumber_textField.getText());
-
-			//Get the clientID
-			ResultSet result = LoginController.getSQL().executeQuery("SELECT clientid from client where clientfirstname='"+firstName+"'" +  " and clientPhone="+phoneNumber);
-			while(result.next()) { clientID = result.getInt(1); }
-
+			lastName_textField.setDisable(true);
+			email_textField.setDisable(true);
 		} else {
-			
-			/* If it's a new user insert the data to the client table and get the client id */
-			
-			String firstName = firstName_textField.getText();
-			String lastName = lastName_textField.getText();
-			long phoneNumber = Integer.parseInt(phoneNumber_textField.getText());
-			String email = email_textField.getText();
-
-
-			//1. Insert into client the new user
-			String query = "INSERT INTO CLIENT (clientfirstname,clientlastname,clientphone,clientemail) values "
-					+ "('"+firstName+"','"+lastName+"',"+phoneNumber+",'"+email+"')";
-			LoginController.getSQL().executeQuery(query);
-
-			//Get the clientID
-			ResultSet result = LoginController.getSQL().executeQuery("SELECT clientid from client where clientfirstname='"+firstName+"'" +  " and clientPhone="+phoneNumber);
-			while(result.next()) { clientID = result.getInt(1); }
+			lastName_textField.setDisable(false);
+			email_textField.setDisable(false);
 		}
-
-		//This all is used to return the id of the movieblocktime using movieid,blockid and timestampid
-		ResultSet result = LoginController.getSQL().executeQuery("SELECT blockid from movieblock where block='"+block+"'");
-		while(result.next()) { blockID = result.getInt(1); }
-		result = LoginController.getSQL().executeQuery("SELECT movieid from movie where movietitle='"+movie+"'");
-		while(result.next()) { movieID = result.getInt(1); }
-		result = LoginController.getSQL().executeQuery("SELECT timestampid from timestamps where timestamp="+timeslot);
-		while(result.next()) { timestampID = result.getInt(1); }
-		result = LoginController.getSQL().executeQuery("SELECT movieblocktimeid from movieblocktime where blockid="+blockID+" and movieid=" + movieID + " and timestampid="+timestampID);
-		while(result.next()) { MovieBlockTimeID = result.getInt(1); }
-
-		//2. Get the arraylist of seats .. traverse through it and insert the seat in the seat table
-		for(int i = 0; i <= selected_seats.size()-1; i++) {
-			SeatButton seat = selected_seats.get(i);
-			int row = seat.row;
-			int column = seat.column;
-			int seatTypeID = 0;
-
-			String seatype = seat.seatType; //find the id of the seatype before inserting
-			result = LoginController.getSQL().executeQuery("SELECT typeID from seatType where seatType='"+seatype+"'");
-			while(result.next()) { seatTypeID = result.getInt(1); }
-
-			String query = "INSERT INTO SEAT (seatrow,seatcolumn,typeid,movieblocktimeid,clientid) values (" 
-					+ row + "," + column + "," + seatTypeID + "," + MovieBlockTimeID + "," + clientID + ")";
-			
-			LoginController.getSQL().executeQuery(query);
-		}
-		
-		///////////////////////////////////  PAYMENT //////////////////////////////////
-		
-		int paymentAmount = 0; //this is the total amount for the seats
-		int ticketCount = 0;
-		int cashierID = 0;
-		
-		//getting the seat price for every seat selected from the table
-		for(int i = 0; i <= selected_seats.size()-1; i++) {
-			String seatype = selected_seats.get(i).seatType; //find the id of the seatype before inserting
-			result = LoginController.getSQL().executeQuery("SELECT seatPrice from seatType where seatType='"+seatype+"'");
-			while(result.next()) { paymentAmount += result.getInt(1); }
-			ticketCount++;
-		}
-		
-		//getting cashierID
-		result = LoginController.getSQL().executeQuery("SELECT cashierID from cashier where cashieruserName='"+LoginController.getUser()+"'");
-		while(result.next()) { cashierID = result.getInt(1); }
-		
-		//Inserting to payments table
-		String query = "INSERT INTO PAYMENT (PAYMENTAMOUNT,PAYMENTTICKETCOUNT,CLIENTID,CASHIERID,MOVIEBLOCKTIMEID) VALUES (" +
-						paymentAmount + "," + ticketCount + "," + clientID + "," + cashierID + "," + MovieBlockTimeID + ")";
-		System.out.println(query);
-		LoginController.getSQL().executeQuery(query);
-		
-		///////////////////////////////////  TICKETS  //////////////////////////////////
-		
-		//We need to get the payment id of the current transaction
-		//int paymentID = 0;
-		
-		int paymentID = 0;
-		
-		query = "SELECT PAYMENTID FROM PAYMENT WHERE CLIENTID=" + clientID + " and CASHIERID=" + cashierID + " and MOVIEBLOCKTIMEID=" + MovieBlockTimeID;
-		result = LoginController.getSQL().executeQuery(query);
-		while(result.next()) { paymentID = result.getInt(1); }
-		
-		//We need to get the ID's of all the selected seats that are pushed in the SEAT Table above
-		
-		ArrayList<Integer> seatIDs = new ArrayList<Integer>();
-		query = "SELECT seatid from seat where MOVIEBLOCKTIMEID=" + MovieBlockTimeID + " and clientID=" + clientID;
-		result = LoginController.getSQL().executeQuery(query);
-		while(result.next()) {
-			seatIDs.add(result.getInt(1));
-		}
-		
-		//Now we insert the tickets for each seat 
-		for(int i = 0; i <= seatIDs.size()-1; i++) {
-			query = "INSERT INTO ticket (clientID,paymentID,cashierID,movieblocktimeid,seatID) values (" + 
-					clientID + "," + paymentID + "," + cashierID + "," +MovieBlockTimeID + "," + seatIDs.get(i) + ")";
-			LoginController.getSQL().executeQuery(query);
-		}
-		
-		//// now everything is said and done exit from here
-
 	}
+	
+	//This will process the transaction
+	public void processTransaction(int clientID) throws SQLException {
+		if(clientID != -1 || clientID != 0) {
+			//get ID of movieblocktime with ID of block,movie,timeslot
+			int MovieBlockTimeID = 0;
+			int blockID = 0;
+			int movieID = 0;
+			int timestampID = 0;
 
-	@Override
-	public void initialize(URL arg0, ResourceBundle arg1) {
-
-		anchorPane_purchase.setVisible(false);
-		
-		block_label.setText(block);
-		movie_label.setText(movie);
-		timeslot_label.setText(Integer.toString(timeslot));
-		
-		//get ID of movieblocktime with ID of block,movie,timeslot
-		int MovieBlockTimeID = 0;
-		int blockID = 0;
-		int movieID = 0;
-		int timestampID = 0;
-		
-		try {
-			
 			//This all is used to return the id of the movieblocktime using movieid,blockid and timestampid
 			ResultSet result = LoginController.getSQL().executeQuery("SELECT blockid from movieblock where block='"+block+"'");
 			while(result.next()) { blockID = result.getInt(1); }
@@ -231,13 +116,151 @@ public class bookTickets_2Controller implements Initializable {
 			result = LoginController.getSQL().executeQuery("SELECT movieblocktimeid from movieblocktime where blockid="+blockID+" and movieid=" + movieID + " and timestampid="+timestampID);
 			while(result.next()) { MovieBlockTimeID = result.getInt(1); }
 
-		} catch (SQLException e5) {
-			// TODO Auto-generated catch block
-			e5.printStackTrace();
+			//2. Get the arraylist of seats .. traverse through it and insert the seat in the seat table
+			for(int i = 0; i <= selected_seats.size()-1; i++) {
+				SeatButton seat = selected_seats.get(i);
+				int row = seat.row;
+				int column = seat.column;
+				int seatTypeID = 0;
+
+				String seatype = seat.seatType; //find the id of the seatype before inserting
+				result = LoginController.getSQL().executeQuery("SELECT typeID from seatType where seatType='"+seatype+"'");
+				while(result.next()) { seatTypeID = result.getInt(1); }
+
+				String query = "INSERT INTO SEAT (seatrow,seatcolumn,typeid,movieblocktimeid,clientid) values (" 
+						+ row + "," + column + "," + seatTypeID + "," + MovieBlockTimeID + "," + clientID + ")";
+
+				LoginController.getSQL().executeQuery(query);
+			}
+
+			///////////////////////////////////  PAYMENT //////////////////////////////////
+
+			int paymentAmount = 0; //this is the total amount for the seats
+			int ticketCount = 0;
+			int cashierID = 0;
+
+			//getting the seat price for every seat selected from the table
+			for(int i = 0; i <= selected_seats.size()-1; i++) {
+				String seatype = selected_seats.get(i).seatType; //find the id of the seatype before inserting
+				result = LoginController.getSQL().executeQuery("SELECT seatPrice from seatType where seatType='"+seatype+"'");
+				while(result.next()) { paymentAmount += result.getInt(1); }
+				ticketCount++;
+			}
+
+			//getting cashierID
+			result = LoginController.getSQL().executeQuery("SELECT cashierID from cashier where cashieruserName='"+LoginController.getUser()+"'");
+			while(result.next()) { cashierID = result.getInt(1); }
+
+			//Inserting to payments table
+			String query = "INSERT INTO PAYMENT (PAYMENTAMOUNT,PAYMENTTICKETCOUNT,CLIENTID,CASHIERID,MOVIEBLOCKTIMEID) VALUES (" +
+					paymentAmount + "," + ticketCount + "," + clientID + "," + cashierID + "," + MovieBlockTimeID + ")";
+			System.out.println("Inserted Payment");
+			LoginController.getSQL().executeQuery(query);
+
+			///////////////////////////////////  TICKETS  //////////////////////////////////
+
+			//We need to get the payment id of the current transaction
+			//int paymentID = 0;
+
+			int paymentID = 0;
+
+			query = "SELECT PAYMENTID FROM PAYMENT WHERE CLIENTID=" + clientID + " and CASHIERID=" + cashierID + " and MOVIEBLOCKTIMEID=" + MovieBlockTimeID;
+			result = LoginController.getSQL().executeQuery(query);
+			while(result.next()) { paymentID = result.getInt(1); }
+
+			//We need to get the ID's of all the selected seats that are pushed in the SEAT Table above
+
+			ArrayList<Integer> seatIDs = new ArrayList<Integer>();
+			query = "SELECT seatid from seat where MOVIEBLOCKTIMEID=" + MovieBlockTimeID + " and clientID=" + clientID;
+			result = LoginController.getSQL().executeQuery(query);
+			while(result.next()) {
+				seatIDs.add(result.getInt(1));
+			}
+
+			//Now we insert the tickets for each seat 
+			for(int i = 0; i <= seatIDs.size()-1; i++) {
+				query = "INSERT INTO ticket (clientID,paymentID,cashierID,movieblocktimeid,seatID) values (" + 
+						clientID + "," + paymentID + "," + cashierID + "," +MovieBlockTimeID + "," + seatIDs.get(i) + ")";
+				LoginController.getSQL().executeQuery(query);
+
+				System.out.println("Inserted Tickets");
+			}
+
+			statusText.setText("Payment Successful");
+		} else {
+			statusText.setText("Payment Not Successful Invalid Client or Information");
 		}
+
+	}
+
+	//Purchase button
+	public void onPurchaseSubmit(ActionEvent e) throws SQLException, IOException {
 		
-		//1. Get row and column of the  seats that are already booked for this movie and timeslot
+		//NOTE: We can't have duplicate first name and contact in the database for now
+		
+		int clientID = -1;
+		
+		//old user
+		if(userCheckBox.isSelected()) {
+			String clientfirstname = firstName_textField.getText().toString();
+			Integer clientphonenumber = Integer.parseInt(phoneNumber_textField.getText().toString());
+
+			//if it's old it still maybe that user is not there or inserted so we check
+			String query = "SELECT clientID from client where clientfirstname='" + clientfirstname + "' or clientphone=" + clientphonenumber;
+			ResultSet result = LoginController.getSQL().executeQuery(query);
+			if(!result.next()) {
+				statusText.setText("User: " + clientfirstname + " does not exist in database");
+			} else {
+				result = LoginController.getSQL().executeQuery(query); //lifetime runs out that's why we query again
+				while(result.next()) { clientID = result.getInt(1);  }
+				statusText.setText("User: " + clientfirstname + " Found ! Processing payment");
+				System.out.println(clientID);
+				processTransaction(clientID);
+			}				
+		} 
+		
+		//new user
+		else {
+			
+			String clientfirstname = firstName_textField.getText();
+			long clientphonenumber = Integer.parseInt(phoneNumber_textField.getText());
+			
+			//if it's old it still maybe that user is not there or inserted so we check
+			String query = "SELECT clientID from client where clientfirstname='" + clientfirstname + "' or clientphone=" + clientphonenumber;
+			ResultSet result = LoginController.getSQL().executeQuery(query);
+			if(result.next()) { //user already exists
+				statusText.setText("User: " + clientfirstname + " or Phone number already exists in database ! kindly uncheck tick");
+			} else {
+				
+				String clientlastname = lastName_textField.getText();
+				String clientemail = email_textField.getText();
+
+				query = "INSERT INTO CLIENT (clientfirstname,clientlastname,clientphone,clientemail) values "
+						+ "('"+clientfirstname+"','"+clientlastname+"',"+clientphonenumber+",'"+clientemail+"')";
+				LoginController.getSQL().executeQuery(query);
+
+				//Get the clientID
+				result = LoginController.getSQL().executeQuery("SELECT clientid from client where clientfirstname='"+clientfirstname+"'" +  " and clientPhone="+clientphonenumber);
+				while(result.next()) { clientID = result.getInt(1); }
+				
+				statusText.setText("New User: " + clientfirstname + " | " + clientID + " ! Inserted client");
+								
+				processTransaction(clientID);
+			}				
+		}
+				
+	}
+	
+	private void loadSeatGrid() {
+		
+		System.out.println("Loading seats");
 		ArrayList<SeatButton> bookedSeats = new ArrayList<SeatButton>();
+		
+		seats.clear();
+		selected_seats.clear();
+		bookedSeats.clear();
+					
+		//1. Get row and column of the  seats that are already booked for this movie and timeslot
 		String query = "SELECT seatrow,seatcolumn from seat where clientid is not NULL and movieblocktimeid="+MovieBlockTimeID;
 		ResultSet result = LoginController.getSQL().executeQuery(query);
 		try {
@@ -297,5 +320,40 @@ public class bookTickets_2Controller implements Initializable {
 				}
 			}
 		}
+	}
+
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) {
+
+		anchorPane_purchase.setVisible(false);
+		
+		block_label.setText(block);
+		movie_label.setText(movie);
+		timeslot_label.setText(Integer.toString(timeslot));
+
+		//get ID of movieblocktime with ID of block,movie,timeslot
+		int blockID = 0;
+		int movieID = 0;
+		int timestampID = 0;
+
+		try {
+
+			//This all is used to return the id of the movieblocktime using movieid,blockid and timestampid
+			ResultSet result = LoginController.getSQL().executeQuery("SELECT blockid from movieblock where block='"+block+"'");
+			while(result.next()) { blockID = result.getInt(1); }
+			result = LoginController.getSQL().executeQuery("SELECT movieid from movie where movietitle='"+movie+"'");
+			while(result.next()) { movieID = result.getInt(1); }
+			result = LoginController.getSQL().executeQuery("SELECT timestampid from timestamps where timestamp="+timeslot);
+			while(result.next()) { timestampID = result.getInt(1); }
+			result = LoginController.getSQL().executeQuery("SELECT movieblocktimeid from movieblocktime where blockid="+blockID+" and movieid=" + movieID + " and timestampid="+timestampID);
+			while(result.next()) { MovieBlockTimeID = result.getInt(1); }
+
+		} catch (SQLException e5) {
+			// TODO Auto-generated catch block
+			e5.printStackTrace();
+		}
+		
+		loadSeatGrid();
+		
 	}
 }

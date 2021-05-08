@@ -45,10 +45,12 @@ public class bookTickets_1Controller implements Initializable {
 	
 	ObservableList<bookTickets_1_TableModel> obList = FXCollections.observableArrayList();
 		
-	public CashierController ccInst; //instance pass via manually in CashierController
+	public static CashierController ccInst; //instance pass via manually in CashierController
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+		
+		System.out.println("Intialzie Running");
 		
 		//Handling double click on a selected row here
 		//After a movie , timeslot and the block is selected
