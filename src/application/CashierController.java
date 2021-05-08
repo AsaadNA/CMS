@@ -27,8 +27,8 @@ public class CashierController implements Initializable {
 		fxmlLoader = new FXMLLoader(getClass().getResource("bookTickets_1.fxml"));
 		bookTickets_1Controller controller = new bookTickets_1Controller();
 		fxmlLoader.setController(controller); 
+		controller.ccInst = this; //this should come first before setting borderpane
 		borderPane.setCenter(fxmlLoader.load());
-		controller.ccInst = this;
 	}
 
 	@Override
