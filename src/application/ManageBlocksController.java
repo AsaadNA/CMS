@@ -43,7 +43,7 @@ public class ManageBlocksController implements Initializable {
 		if(toggledButton.isSelected()) {
 			toggledButton.setStyle("-fx-background-color: green");
 		} else {
-			toggledButton.setStyle("-fx-background-color: #303030");
+			toggledButton.setStyle("-fx-background-color: #88e327");
 		}
 	}
 	

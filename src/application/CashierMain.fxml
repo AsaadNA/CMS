@@ -2,13 +2,15 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane prefHeight="615.0" prefWidth="1099.0" style="-fx-background-color: #292929;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/16" fx:controller="application.CashierController">
+<AnchorPane prefHeight="615.0" prefWidth="1099.0" style="-fx-background-color: #292929;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.CashierController">
    <children>
       <BorderPane fx:id="borderPane" layoutX="10.0" layoutY="10.0" prefHeight="615.0" prefWidth="1099.0" style="-fx-background-color: #292929;">
          <left>
@@ -24,6 +26,11 @@
                         <Font size="18.0" />
                      </font>
                   </Button>
+                  <Button contentDisplay="RIGHT" mnemonicParsing="false" prefHeight="60.0" prefWidth="210.0" style="-fx-background-color: #FF0000;" text="Logout" textFill="WHITE">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Button>
                </children>
                <padding>
                   <Insets top="200.0" />
@@ -34,5 +41,30 @@
             <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="605.0" prefWidth="889.0" style="-fx-background-color: #292929;" BorderPane.alignment="CENTER" />
          </center>
       </BorderPane>
+      <ImageView fx:id="closeButton" fitHeight="54.0" fitWidth="58.0" layoutX="1022.0" layoutY="18.0" onMouseClicked="#onCloseClick" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../res/close.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="closeButton" fitHeight="54.0" fitWidth="58.0" layoutX="1022.0" layoutY="18.0" onMouseClicked="#onCloseClick" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../res/close.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="56.0" layoutY="20.0" text="User : " textFill="WHITE">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <Label fx:id="usernameLabel_cashier" layoutX="123.0" layoutY="21.0" text="AsaadNA" textFill="WHITE">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <Label layoutX="82.0" layoutY="57.0" text="( Cashier )" textFill="#ff12c6">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

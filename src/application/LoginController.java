@@ -9,10 +9,12 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Window;
 
 public class LoginController implements Initializable {
 	
@@ -28,6 +30,8 @@ public class LoginController implements Initializable {
 	private double xOffset = 0 , yOffset = 0; //Borderless window
 	
 	private static String user = null;
+	
+	public static Scene loginScene;
 	
 	public static String getUser() { return user; }
 	public static SQLController getSQL() { return sqlController; }
@@ -52,7 +56,7 @@ public class LoginController implements Initializable {
 			
 		} else { 
 			user = userField.getText();
-			System.out.println("[LOG @ LoginController] ADMIN : Login successful");			
+			System.out.println("[LOG @ LoginController] ADMIN : Login successful");		
             ((Node)(e.getSource())).getScene().getWindow().hide();
 			@SuppressWarnings("unused")
 			Main main = new Main();

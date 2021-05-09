@@ -27,17 +27,17 @@
       </GridPane>
       <HBox layoutX="320.0" layoutY="541.0" prefHeight="60.0" prefWidth="288.0" spacing="20.0">
          <children>
-            <Button mnemonicParsing="false" onAction="#onAddClick" prefHeight="35.0" prefWidth="71.0" style="-fx-background-color: #303030;" text="Add" textFill="WHITE">
+            <Button mnemonicParsing="false" onAction="#onAddClick" prefHeight="35.0" prefWidth="71.0" style="-fx-background-color: #88e327;" text="Add" textFill="BLACK">
                <font>
                   <Font size="16.0" />
                </font>
             </Button>
-            <ToggleButton fx:id="removeToggle" mnemonicParsing="false" onAction="#onToggleClick" style="-fx-background-color: #303030;" text="Remove" textFill="WHITE">
+            <ToggleButton fx:id="removeToggle" mnemonicParsing="false" onAction="#onToggleClick" style="-fx-background-color: #88e327;" text="Remove" textFill="BLACK">
                <font>
                   <Font size="16.0" />
                </font>
             </ToggleButton>
-            <ToggleButton fx:id="updatseToggle" mnemonicParsing="false" onAction="#onToggleClick" style="-fx-background-color: #303030;" text="Update" textFill="WHITE">
+            <ToggleButton fx:id="updatseToggle" mnemonicParsing="false" onAction="#onToggleClick" style="-fx-background-color: #88e327;" text="Update" textFill="BLACK">
                <font>
                   <Font size="16.0" />
                </font>

@@ -4,11 +4,14 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
@@ -17,8 +20,18 @@ public class MainController implements Initializable {
 	
 	@FXML 
 	BorderPane borderPane;
-
+	@FXML
+	ImageView closeButton;
+	@FXML
+	Label usernameLabel;
+	
 	private double xOffset = 0 , yOffset = 0; //For borderless window movment
+	
+	//This handles the close button
+	public void onCloseClick(MouseEvent e) {
+		Platform.exit();
+		System.exit(1);
+	}
 	
 	//Helper function to load pane fxml
 	public Pane getPane(String path) throws IOException {
@@ -45,8 +58,15 @@ public class MainController implements Initializable {
 		} borderPane.setCenter(manageMovies);
 	}
 
+	public void onLogoutClick(ActionEvent e) {
+		System.out.println("LOggging out");
+	}
+	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+		
+		//Setting the username label here
+		usernameLabel.setText(LoginController.getUser());
 		
 		/*
 		 *  These pieces of code basically some up the movement of

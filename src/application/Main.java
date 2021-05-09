@@ -14,6 +14,10 @@ public class Main {
 	
 	public static Stage getStage() { return stage;}  
 	
+	public static void close() {
+		stage.close();
+	}
+	
 	//Instantiating the stage
 	public Main() {
 				

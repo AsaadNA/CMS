@@ -1,4 +1,3 @@
-import application.bookTickets_1_TableModel;
 
 module CMS {
 	requires javafx.controls;

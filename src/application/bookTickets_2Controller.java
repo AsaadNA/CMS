@@ -11,6 +11,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
@@ -22,8 +24,6 @@ import javafx.scene.layout.GridPane;
  * This is basically the scene where u book the seats
  * 
  */
-
-//TODO: Payment System
 
 public class bookTickets_2Controller implements Initializable {
 
@@ -83,7 +83,7 @@ public class bookTickets_2Controller implements Initializable {
 
 			anchorPane_purchase.setVisible(true);
 		} else {
-			System.out.println("Select a seat");
+			//System.out.println("Select a seat");
 		}
 	}
 	
@@ -99,7 +99,9 @@ public class bookTickets_2Controller implements Initializable {
 	
 	//This will process the transaction
 	public void processTransaction(int clientID) throws SQLException {
+		
 		if(clientID != -1 || clientID != 0) {
+			
 			//get ID of movieblocktime with ID of block,movie,timeslot
 			int MovieBlockTimeID = 0;
 			int blockID = 0;
@@ -115,24 +117,7 @@ public class bookTickets_2Controller implements Initializable {
 			while(result.next()) { timestampID = result.getInt(1); }
 			result = LoginController.getSQL().executeQuery("SELECT movieblocktimeid from movieblocktime where blockid="+blockID+" and movieid=" + movieID + " and timestampid="+timestampID);
 			while(result.next()) { MovieBlockTimeID = result.getInt(1); }
-
-			//2. Get the arraylist of seats .. traverse through it and insert the seat in the seat table
-			for(int i = 0; i <= selected_seats.size()-1; i++) {
-				SeatButton seat = selected_seats.get(i);
-				int row = seat.row;
-				int column = seat.column;
-				int seatTypeID = 0;
-
-				String seatype = seat.seatType; //find the id of the seatype before inserting
-				result = LoginController.getSQL().executeQuery("SELECT typeID from seatType where seatType='"+seatype+"'");
-				while(result.next()) { seatTypeID = result.getInt(1); }
-
-				String query = "INSERT INTO SEAT (seatrow,seatcolumn,typeid,movieblocktimeid,clientid) values (" 
-						+ row + "," + column + "," + seatTypeID + "," + MovieBlockTimeID + "," + clientID + ")";
-
-				LoginController.getSQL().executeQuery(query);
-			}
-
+			
 			///////////////////////////////////  PAYMENT //////////////////////////////////
 
 			int paymentAmount = 0; //this is the total amount for the seats
@@ -154,45 +139,73 @@ public class bookTickets_2Controller implements Initializable {
 			//Inserting to payments table
 			String query = "INSERT INTO PAYMENT (PAYMENTAMOUNT,PAYMENTTICKETCOUNT,CLIENTID,CASHIERID,MOVIEBLOCKTIMEID) VALUES (" +
 					paymentAmount + "," + ticketCount + "," + clientID + "," + cashierID + "," + MovieBlockTimeID + ")";
-			System.out.println("Inserted Payment");
+			//System.out.println("Inserted Payment");
 			LoginController.getSQL().executeQuery(query);
-
-			///////////////////////////////////  TICKETS  //////////////////////////////////
-
-			//We need to get the payment id of the current transaction
-			//int paymentID = 0;
-
+			
+			
 			int paymentID = 0;
 
+			//getting paymentID
 			query = "SELECT PAYMENTID FROM PAYMENT WHERE CLIENTID=" + clientID + " and CASHIERID=" + cashierID + " and MOVIEBLOCKTIMEID=" + MovieBlockTimeID;
 			result = LoginController.getSQL().executeQuery(query);
 			while(result.next()) { paymentID = result.getInt(1); }
+			
+			
+			///////////////////			SEAT & TICKET   ////////////////////////////
+			
+			//after the seat is inserted we are also going to insert the ticket in the same loop
 
-			//We need to get the ID's of all the selected seats that are pushed in the SEAT Table above
+			//Get the arraylist of seats .. traverse through it and insert the seat in the seat table
+			for(int i = 0; i <= selected_seats.size()-1; i++) {
+				
+				SeatButton seat = selected_seats.get(i);
+				int row = seat.row;
+				int column = seat.column;
+				int seatTypeID = 0;
 
-			ArrayList<Integer> seatIDs = new ArrayList<Integer>();
-			query = "SELECT seatid from seat where MOVIEBLOCKTIMEID=" + MovieBlockTimeID + " and clientID=" + clientID;
-			result = LoginController.getSQL().executeQuery(query);
-			while(result.next()) {
-				seatIDs.add(result.getInt(1));
-			}
+				String seatype = seat.seatType; //find the id of the seatype before inserting
+				result = LoginController.getSQL().executeQuery("SELECT typeID from seatType where seatType='"+seatype+"'");
+				while(result.next()) { seatTypeID = result.getInt(1); }
 
-			//Now we insert the tickets for each seat 
-			for(int i = 0; i <= seatIDs.size()-1; i++) {
+				query = "INSERT INTO SEAT (seatrow,seatcolumn,typeid,movieblocktimeid,clientid) values (" 
+						+ row + "," + column + "," + seatTypeID + "," + MovieBlockTimeID + "," + clientID + ")";
+
+				LoginController.getSQL().executeQuery(query);
+			
+				//Insert ticket
+				int seatID = 0;
+				query = "SELECT seatid from seat where MOVIEBLOCKTIMEID=" + MovieBlockTimeID + " and clientID=" + clientID + " and seatrow=" + seat.row + " and seatcolumn="+seat.column + " and typeid="+seatTypeID;
+				result = LoginController.getSQL().executeQuery(query);
+				while(result.next()) { seatID = result.getInt(1); }
+				
 				query = "INSERT INTO ticket (clientID,paymentID,cashierID,movieblocktimeid,seatID) values (" + 
-						clientID + "," + paymentID + "," + cashierID + "," +MovieBlockTimeID + "," + seatIDs.get(i) + ")";
+						clientID + "," + paymentID + "," + cashierID + "," +MovieBlockTimeID + "," + seatID + ")";
 				LoginController.getSQL().executeQuery(query);
 
-				System.out.println("Inserted Tickets");
-			}
-
-			statusText.setText("Payment Successful");
-		} else {
-			statusText.setText("Payment Not Successful Invalid Client or Information");
+			} 
+			
+			showInfo("Transaction Completed !");
+		} 
+		
+		else {
+			showError("Payment Not Successful Invalid Client or Information");
 		}
+		
+		seats.clear();
+		selected_seats.clear();
 
 	}
 
+	private void showError(String text) {
+		Alert alert = new Alert(AlertType.ERROR,text);
+		alert.showAndWait();
+	}
+	
+	private void showInfo(String text) {
+		Alert alter = new Alert(AlertType.INFORMATION,text);
+		alter.showAndWait();
+	}
+	
 	//Purchase button
 	public void onPurchaseSubmit(ActionEvent e) throws SQLException, IOException {
 		
@@ -203,37 +216,36 @@ public class bookTickets_2Controller implements Initializable {
 		//old user
 		if(userCheckBox.isSelected()) {
 			String clientfirstname = firstName_textField.getText().toString();
-			Integer clientphonenumber = Integer.parseInt(phoneNumber_textField.getText().toString());
+			String clientphonenumber = phoneNumber_textField.getText().toString();
 
 			//if it's old it still maybe that user is not there or inserted so we check
-			String query = "SELECT clientID from client where clientfirstname='" + clientfirstname + "' or clientphone=" + clientphonenumber;
+			String query = "SELECT clientID from client where (clientfirstname='" + clientfirstname + "' and clientphone=" + clientphonenumber + ") and clientphone=" + clientphonenumber;
 			ResultSet result = LoginController.getSQL().executeQuery(query);
 			if(!result.next()) {
-				statusText.setText("User: " + clientfirstname + " does not exist in database");
+				showError("User data does not exist");
 			} else {
 				result = LoginController.getSQL().executeQuery(query); //lifetime runs out that's why we query again
 				while(result.next()) { clientID = result.getInt(1);  }
-				statusText.setText("User: " + clientfirstname + " Found ! Processing payment");
-				System.out.println(clientID);
 				processTransaction(clientID);
+				showInfo("Transaction Completed");
 			}				
 		} 
 		
 		//new user
 		else {
 			
-			String clientfirstname = firstName_textField.getText();
-			long clientphonenumber = Integer.parseInt(phoneNumber_textField.getText());
-			
+			String clientfirstname = firstName_textField.getText().toString();
+			String clientphonenumber = phoneNumber_textField.getText().toString();
+			String clientemail = email_textField.getText();
+
 			//if it's old it still maybe that user is not there or inserted so we check
-			String query = "SELECT clientID from client where clientfirstname='" + clientfirstname + "' or clientphone=" + clientphonenumber;
+			String query = "SELECT clientID from client where (clientfirstname='" + clientfirstname + "' and clientphone=" + clientphonenumber + ") or clientphone=" + clientphonenumber + " or clientemail='" + clientemail + "'";
 			ResultSet result = LoginController.getSQL().executeQuery(query);
 			if(result.next()) { //user already exists
-				statusText.setText("User: " + clientfirstname + " or Phone number already exists in database ! kindly uncheck tick");
+				showError("Key Value Already Exists");
 			} else {
 				
 				String clientlastname = lastName_textField.getText();
-				String clientemail = email_textField.getText();
 
 				query = "INSERT INTO CLIENT (clientfirstname,clientlastname,clientphone,clientemail) values "
 						+ "('"+clientfirstname+"','"+clientlastname+"',"+clientphonenumber+",'"+clientemail+"')";
@@ -242,18 +254,15 @@ public class bookTickets_2Controller implements Initializable {
 				//Get the clientID
 				result = LoginController.getSQL().executeQuery("SELECT clientid from client where clientfirstname='"+clientfirstname+"'" +  " and clientPhone="+clientphonenumber);
 				while(result.next()) { clientID = result.getInt(1); }
-				
-				statusText.setText("New User: " + clientfirstname + " | " + clientID + " ! Inserted client");
-								
+							
 				processTransaction(clientID);
 			}				
-		}
+		} 
 				
 	}
 	
 	private void loadSeatGrid() {
 		
-		System.out.println("Loading seats");
 		ArrayList<SeatButton> bookedSeats = new ArrayList<SeatButton>();
 		
 		seats.clear();
@@ -315,6 +324,7 @@ public class bookTickets_2Controller implements Initializable {
 			for(int j = 0; j <= seats.size()-1; j++) {
 				SeatButton seat = seats.get(j);
 				if((bSeat.row == seat.row) && (bSeat.column == seat.column)) {
+					//seats.get(i).isBooked = true;
 					anchorPane_seats.getChildren().remove((SeatButton)seats.get(j));
 					seats.remove(j);
 				}

@@ -47,6 +47,7 @@ public class SeatButton extends ImageView {
 				//If it's not booked already then we can select
 				//or what not retrieved from db
 				if(!isBooked) {
+					System.out.println("Clicking booked");
 					//simple toggle for selected or not selected
 					if(isSelected) {
 						isSelected = false;
@@ -59,7 +60,7 @@ public class SeatButton extends ImageView {
 						//add to the arraylist
 						bt2Inst.selected_seats.add((SeatButton)e.getSource());
 					}
-				}				
+				}			
 			}
 		});
 		

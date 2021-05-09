@@ -15,14 +15,14 @@
       </Label>
       <ComboBox fx:id="timeBox_addSlot" layoutX="35.0" layoutY="137.0" prefHeight="25.0" prefWidth="169.0" />
       <ComboBox fx:id="movieBox_addSlot" layoutX="223.0" layoutY="137.0" prefHeight="25.0" prefWidth="169.0" />
-      <Button layoutX="411.0" layoutY="137.0" mnemonicParsing="false" onAction="#onAddSlotClick" style="-fx-background-color: #292929;" text="Add slot" textFill="WHITE" />
+      <Button layoutX="405.0" layoutY="137.0" mnemonicParsing="false" onAction="#onAddSlotClick" prefHeight="25.0" prefWidth="63.0" style="-fx-background-color: #88e327;" text="Add slot" textFill="BLACK" />
       <ComboBox fx:id="timeBox_otherSlot" layoutX="35.0" layoutY="182.0" prefHeight="25.0" prefWidth="169.0" />
       <ComboBox fx:id="movieBox_otherSlot" layoutX="223.0" layoutY="182.0" prefHeight="25.0" prefWidth="169.0" />
-      <Button layoutX="405.0" layoutY="182.0" mnemonicParsing="false" onAction="#onDeleteSlotClick" style="-fx-background-color: #292929;" text="Delete slot" textFill="WHITE" />
-      <Button layoutX="493.0" layoutY="182.0" mnemonicParsing="false" onAction="#onUpdateMovieClick" style="-fx-background-color: #292929;" text="Update Movie" textFill="WHITE" />
-      <Button layoutX="276.0" layoutY="243.0" mnemonicParsing="false" onAction="#onDoneClick" style="-fx-background-color: #292929;" text="DONE" textFill="WHITE">
+      <Button layoutX="405.0" layoutY="182.0" mnemonicParsing="false" onAction="#onDeleteSlotClick" style="-fx-background-color: #88e327;" text="Delete slot" textFill="BLACK" />
+      <Button layoutX="493.0" layoutY="182.0" mnemonicParsing="false" onAction="#onUpdateMovieClick" style="-fx-background-color: #88e327;" text="Update Movie" textFill="BLACK" />
+      <Button layoutX="276.0" layoutY="243.0" mnemonicParsing="false" onAction="#onDoneClick" style="-fx-background-color: #FF0000;" text="Done" textFill="WHITE">
          <font>
-            <Font size="20.0" />
+            <Font size="17.0" />
          </font>
       </Button>
       <Label fx:id="blockLabel" layoutX="442.0" layoutY="63.0" text="A" textFill="WHITE">
