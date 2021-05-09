@@ -44,6 +44,12 @@ public class CashierController implements Initializable {
 		borderPane.setCenter(fxmlLoader.load());
 	}
 
+	//On logout click
+	public void onLogoutClick(ActionEvent e) {
+		Login.getStage().show();
+		Cashier.getStage().hide();
+	}
+	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		

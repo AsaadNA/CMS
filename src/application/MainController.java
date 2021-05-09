@@ -59,7 +59,8 @@ public class MainController implements Initializable {
 	}
 
 	public void onLogoutClick(ActionEvent e) {
-		System.out.println("LOggging out");
+		Login.getStage().show();
+		Main.getStage().hide();
 	}
 	
 	@Override

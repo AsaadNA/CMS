@@ -26,7 +26,7 @@
                         <Font size="18.0" />
                      </font>
                   </Button>
-                  <Button contentDisplay="RIGHT" mnemonicParsing="false" prefHeight="60.0" prefWidth="210.0" style="-fx-background-color: #FF0000;" text="Logout" textFill="WHITE">
+                  <Button contentDisplay="RIGHT" mnemonicParsing="false" onAction="#onLogoutClick" prefHeight="60.0" prefWidth="210.0" style="-fx-background-color: #FF0000;" text="Logout" textFill="WHITE">
                      <font>
                         <Font size="18.0" />
                      </font>
@@ -41,12 +41,7 @@
             <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="605.0" prefWidth="889.0" style="-fx-background-color: #292929;" BorderPane.alignment="CENTER" />
          </center>
       </BorderPane>
-      <ImageView fx:id="closeButton" fitHeight="54.0" fitWidth="58.0" layoutX="1022.0" layoutY="18.0" onMouseClicked="#onCloseClick" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../../res/close.png" />
-         </image>
-      </ImageView>
-      <ImageView fx:id="closeButton" fitHeight="54.0" fitWidth="58.0" layoutX="1022.0" layoutY="18.0" onMouseClicked="#onCloseClick" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="closeButton" fitHeight="54.0" fitWidth="58.0" layoutX="1062.0" layoutY="-5.0" onMouseClicked="#onCloseClick" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../../res/close.png" />
          </image>

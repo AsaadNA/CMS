@@ -4,6 +4,8 @@ import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
+
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -49,7 +51,7 @@ public class LoginController implements Initializable {
 			} else {
 				user = userField.getText();
 				System.out.println("[LOG @ LoginController] CASHIER : Login successful");			
-	            ((Node)(e.getSource())).getScene().getWindow().hide();
+				Login.getStage().hide();
 				@SuppressWarnings("unused")
 				Cashier cashier = new Cashier();
 			}
@@ -57,16 +59,22 @@ public class LoginController implements Initializable {
 		} else { 
 			user = userField.getText();
 			System.out.println("[LOG @ LoginController] ADMIN : Login successful");		
-            ((Node)(e.getSource())).getScene().getWindow().hide();
+            //((Node)(e.getSource())).getScene().getWindow().hide();
+			Login.getStage().hide();
 			@SuppressWarnings("unused")
 			Main main = new Main();
 		}
 	}
 
+	public void onCloseClick(MouseEvent e) {
+		Platform.exit();
+		System.exit(1);
+	}
+	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		
-		sqlController = new SQLController(); //Intialzing sql connection
+		sqlController = new SQLController(); //Intialzing sql connection once
 		
 		/*
 		 *  These pieces of code basically some up the movement of
@@ -75,8 +83,8 @@ public class LoginController implements Initializable {
 		
 		pane.setOnMousePressed(new EventHandler<MouseEvent>() {
 			public void handle(MouseEvent e) {
-				xOffset = Login.stage.getX() - e.getScreenX();
-                yOffset = Login.stage.getY() - e.getScreenY();
+				xOffset = Login.getStage().getX() - e.getScreenX();
+                yOffset = Login.getStage().getY() - e.getScreenY();
 			}
 			
 		});
@@ -84,8 +92,8 @@ public class LoginController implements Initializable {
 		pane.setOnMouseDragged(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-            	Login.stage.setX(event.getScreenX() + xOffset);
-            	Login.stage.setY(event.getScreenY() + yOffset);
+            	Login.getStage().setX(event.getScreenX() + xOffset);
+            	Login.getStage().setY(event.getScreenY() + yOffset);
             }
         });
 	}

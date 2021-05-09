@@ -81,11 +81,6 @@
                   <Font size="25.0" />
                </font>
             </Label>
-            <Label layoutX="153.0" layoutY="372.0" text="Status : " textFill="WHITE">
-               <font>
-                  <Font size="17.0" />
-               </font>
-            </Label>
          </children>
       </AnchorPane>
       <Button fx:id="bookNowButton" layoutX="460.0" layoutY="534.0" mnemonicParsing="false" onAction="#onBookNowClick" style="-fx-background-color: #303030;" text="Book Now" textFill="WHITE">

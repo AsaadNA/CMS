@@ -4,6 +4,8 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
@@ -26,5 +28,10 @@
             <Font size="16.0" />
          </font>
       </Button>
+      <ImageView fitHeight="56.0" fitWidth="63.0" layoutX="255.0" layoutY="-5.0" onMouseClicked="#onCloseClick" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../res/close.png" />
+         </image>
+      </ImageView>
    </children>
 </AnchorPane>

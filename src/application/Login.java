@@ -9,8 +9,9 @@ import javafx.stage.StageStyle;
 
 public class Login extends Application {
 	
-	public static Stage stage;
-		
+	private static Stage stage;
+	public static Stage getStage() { return stage;}  
+
 	public static void main(String args[]) {
 		launch(args);
 	}

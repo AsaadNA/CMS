@@ -53,8 +53,6 @@ public class bookTickets_2Controller implements Initializable {
 	Button purchase_submit_button;
 	@FXML
 	CheckBox userCheckBox;
-	@FXML
-	Label statusText;
 	
 	//Passed via bookTickets_1Controller parameter
 	public String block,movie;
@@ -324,9 +322,11 @@ public class bookTickets_2Controller implements Initializable {
 			for(int j = 0; j <= seats.size()-1; j++) {
 				SeatButton seat = seats.get(j);
 				if((bSeat.row == seat.row) && (bSeat.column == seat.column)) {
-					//seats.get(i).isBooked = true;
-					anchorPane_seats.getChildren().remove((SeatButton)seats.get(j));
-					seats.remove(j);
+					SeatButton s = (SeatButton) anchorPane_seats.getChildren().get(j);
+					s.setBooked(true);
+					//seats.get(i).setBooked(true);
+					//anchorPane_seats.getChildren().remove((SeatButton)seats.get(j));
+					//seats.remove(j);
 				}
 			}
 		}

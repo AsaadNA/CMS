@@ -63,7 +63,7 @@
             <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="547.0" prefWidth="889.0" style="-fx-background-color: #292929;" BorderPane.alignment="CENTER" />
          </center>
       </BorderPane>
-      <ImageView fx:id="closeButton" fitHeight="54.0" fitWidth="58.0" layoutX="1012.0" layoutY="8.0" onMouseClicked="#onCloseClick" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="closeButton" fitHeight="54.0" fitWidth="58.0" layoutX="1047.0" layoutY="-6.0" onMouseClicked="#onCloseClick" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../../res/close.png" />
          </image>
