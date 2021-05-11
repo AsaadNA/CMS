@@ -20,7 +20,7 @@
       <ComboBox fx:id="movieBox_otherSlot" layoutX="223.0" layoutY="182.0" prefHeight="25.0" prefWidth="169.0" />
       <Button layoutX="405.0" layoutY="182.0" mnemonicParsing="false" onAction="#onDeleteSlotClick" style="-fx-background-color: #88e327;" text="Delete slot" textFill="BLACK" />
       <Button layoutX="493.0" layoutY="182.0" mnemonicParsing="false" onAction="#onUpdateMovieClick" style="-fx-background-color: #88e327;" text="Update Movie" textFill="BLACK" />
-      <Button layoutX="276.0" layoutY="243.0" mnemonicParsing="false" onAction="#onDoneClick" style="-fx-background-color: #FF0000;" text="Done" textFill="WHITE">
+      <Button layoutX="250.0" layoutY="247.0" mnemonicParsing="false" onAction="#onDoneClick" prefHeight="38.0" prefWidth="101.0" style="-fx-background-color: #FF0000;" text="Done" textFill="WHITE">
          <font>
             <Font size="17.0" />
          </font>

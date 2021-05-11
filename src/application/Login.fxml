@@ -16,14 +16,9 @@
             <Font name="System Bold" size="39.0" />
          </font>
       </Label>
-      <TextField fx:id="userField" layoutX="67.0" layoutY="110.0" prefHeight="25.0" prefWidth="181.0" style="-fx-background-color: #FFFFFF;" />
-      <PasswordField fx:id="passwordField" layoutX="67.0" layoutY="155.0" prefHeight="25.0" prefWidth="181.0" style="-fx-background-color: #FFFFFF;" />
-      <Button layoutX="66.0" layoutY="213.0" mnemonicParsing="false" onAction="#onLoginClick" prefHeight="35.0" prefWidth="83.0" style="-fx-background-color: #292929;" text="Login" textFill="WHITE">
-         <font>
-            <Font size="16.0" />
-         </font>
-      </Button>
-      <Button layoutX="155.0" layoutY="213.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="95.0" style="-fx-background-color: #292929;" text="Register" textFill="WHITE">
+      <TextField fx:id="userField" layoutX="67.0" layoutY="110.0" prefHeight="25.0" prefWidth="181.0" promptText="AsaadNA / 03666888528" style="-fx-background-color: #FFFFFF;" />
+      <PasswordField fx:id="passwordField" layoutX="67.0" layoutY="155.0" prefHeight="25.0" prefWidth="181.0" promptText="Enter password" style="-fx-background-color: #FFFFFF;" />
+      <Button layoutX="91.0" layoutY="209.0" mnemonicParsing="false" onAction="#onLoginClick" prefHeight="35.0" prefWidth="132.0" style="-fx-background-color: #FF0000;" text="Login" textFill="WHITE">
          <font>
             <Font size="16.0" />
          </font>

@@ -1,6 +1,7 @@
 package application;
 
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -23,6 +24,7 @@ public class Cashier {
 		}
 		
 		Scene mainScene = new Scene(root);
+        mainScene.setCursor(Cursor.HAND);
 		stage = new Stage();
 		stage.setScene(mainScene);
 		stage.setTitle("CMS");

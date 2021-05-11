@@ -48,7 +48,7 @@ public class BlockButtons extends Button {
 		this.setText(info.block);
 	    this.setMaxWidth(Double.MAX_VALUE);
 	    this.setMaxHeight(Double.MAX_VALUE);
-		this.setFont(new Font(57));
+		this.setFont(new Font(45));
 		this.setTextFill(Color.WHITE);
 		this.setStyle("fx-background-radius: 15px; -fx-background-color:#303030;");
 		
@@ -62,7 +62,7 @@ public class BlockButtons extends Button {
 		}
 		
 		tt.setText(toolTipText);
-		tt.setStyle("-fx-font: normal bold 20 Langdon; "
+		tt.setStyle("-fx-font: normal bold 17 Langdon; "
 		    + "-fx-background-color: #292929; "
 		    + "-fx-text-fill: white;");
 

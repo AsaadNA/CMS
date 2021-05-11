@@ -11,7 +11,7 @@
 
 <AnchorPane prefHeight="615.0" prefWidth="889.0" style="-fx-background-color: #292929;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <HBox layoutX="195.0" layoutY="21.0" prefHeight="47.0" prefWidth="741.0" spacing="25.0">
+      <HBox layoutX="204.0" layoutY="24.0" prefHeight="47.0" prefWidth="741.0" spacing="25.0">
          <children>
             <Label text="Block" textFill="WHITE">
                <font>
@@ -66,7 +66,7 @@
                   <Font size="15.0" />
                </font>
             </TextField>
-            <Button fx:id="purchase_submit_button" layoutX="342.0" layoutY="302.0" mnemonicParsing="false" onAction="#onPurchaseSubmit" style="-fx-background-color: #303030;" text="Purchase" textFill="WHITE">
+            <Button fx:id="purchase_submit_button" layoutX="303.0" layoutY="302.0" mnemonicParsing="false" onAction="#onPurchaseSubmit" prefHeight="44.0" prefWidth="175.0" style="-fx-background-color: #88e327;" text="Purchase">
                <font>
                   <Font size="20.0" />
                </font>
@@ -83,7 +83,7 @@
             </Label>
          </children>
       </AnchorPane>
-      <Button fx:id="bookNowButton" layoutX="460.0" layoutY="534.0" mnemonicParsing="false" onAction="#onBookNowClick" style="-fx-background-color: #303030;" text="Book Now" textFill="WHITE">
+      <Button fx:id="bookNowButton" layoutX="425.0" layoutY="534.0" mnemonicParsing="false" onAction="#onBookNowClick" prefHeight="39.0" prefWidth="166.0" style="-fx-background-color: #88e327;" text="Book Now">
          <font>
             <Font size="18.0" />
          </font>

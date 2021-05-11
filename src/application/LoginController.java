@@ -12,8 +12,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Window;
@@ -47,7 +49,8 @@ public class LoginController implements Initializable {
 			query = "SELECT * from CASHIER where cashierusername=" + "'" + userField.getText() + "' and cashierpassword='" + passwordField.getText() + "'"; 
 			result = sqlController.executeQuery(query);
 			if(!result.next()) {
-				userField.setText(""); passwordField.setText("");
+				Alert alert = new Alert(AlertType.ERROR,"Invalid username or password");
+				alert.showAndWait();
 			} else {
 				user = userField.getText();
 				System.out.println("[LOG @ LoginController] CASHIER : Login successful");			

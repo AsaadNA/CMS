@@ -45,7 +45,7 @@ class CustomComponentBookTicketOne extends AnchorPane {
 	private Label createLabel(String text , int x , int y) {
 		Label result = new Label(text);
 		result.setTextFill(Color.WHITE);
-		result.setFont(new Font("System",24));
+		result.setFont(new Font("System",17));
 		result.setLayoutX(x);
 		result.setLayoutY(y);
 		
@@ -58,7 +58,7 @@ class CustomComponentBookTicketOne extends AnchorPane {
 		this.timestamp = timestamp;
 		this.seatsLeft = seatsLeft;
 				
-		setStyle("-fx-background-color: #303030");
+		setStyle("-fx-background-color: #292929");
 		setPrefSize(450, 150);
 		
 		Label blockLabel = createLabel("Block : " + block,42,26);
@@ -68,7 +68,7 @@ class CustomComponentBookTicketOne extends AnchorPane {
 		
 		Button button = new Button("Purchase Tickets");
 		button.setStyle("-fx-background-color: #88e327");
-		button.setFont(new Font("System",17));
+		button.setFont(new Font("System",15));
 		button.setLayoutX(539);
 		button.setLayoutY(62);
 		
@@ -116,7 +116,7 @@ public class bookTickets_1Controller implements Initializable {
 		
 		VBox content = new VBox(5);
 		content.setStyle("-fx-background-color: #292929");
-		content.setSpacing(10);
+		content.setSpacing(5);
 		ScrollPane scroller = new ScrollPane(content);
 		scroller.setFitToWidth(true);
 		scroller.setLayoutX(66);

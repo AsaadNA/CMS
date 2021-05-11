@@ -44,6 +44,15 @@ public class CashierController implements Initializable {
 		borderPane.setCenter(fxmlLoader.load());
 	}
 
+	public void onManagePaymentsClick(ActionEvent e) throws IOException {
+		FXMLLoader fxmlLoader = null;
+		fxmlLoader = new FXMLLoader(getClass().getResource("ManagePayments_1.fxml"));
+		ManagePayments1_Controller controller = new ManagePayments1_Controller();
+		fxmlLoader.setController(controller); 
+		controller.ccInst = this; //this should come first before setting borderpane
+		borderPane.setCenter(fxmlLoader.load());
+	}
+	
 	//On logout click
 	public void onLogoutClick(ActionEvent e) {
 		Login.getStage().show();
