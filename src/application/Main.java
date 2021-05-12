@@ -7,6 +7,17 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+//1. Shifted over to DATETIME instead of INTEGER TIMESLOT
+//2. TimeStamp log during payment
+//3. After purchase it goes back to display all the booking
+//4. [Bug fix] double info message displayed
+//5. Manage Payments Implemented
+//6. Refunding Payments Implemented
+//7. Search payments by phone number implemented
+//8. Search movie seats by movies in bookTickets_1 implemented
+//9. Generate QR code and save path to ticket 
+//10. Generate and save ticket to localfile with the qr code attached
+
 public class Main {
 
 	private static Stage stage;
@@ -19,7 +30,7 @@ public class Main {
 	
 	//Instantiating the stage
 	public Main() {
-				
+		
 		Parent root = null;
 		try {
 			root = FXMLLoader.load(getClass().getResource("Main.fxml"));

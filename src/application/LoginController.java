@@ -54,8 +54,7 @@ public class LoginController implements Initializable {
 			} else {
 				user = userField.getText();
 				System.out.println("[LOG @ LoginController] CASHIER : Login successful");			
-				Login.getStage().hide();
-				@SuppressWarnings("unused")
+				Login.getStage().hide();				
 				Cashier cashier = new Cashier();
 			}
 			
@@ -64,7 +63,6 @@ public class LoginController implements Initializable {
 			System.out.println("[LOG @ LoginController] ADMIN : Login successful");		
             //((Node)(e.getSource())).getScene().getWindow().hide();
 			Login.getStage().hide();
-			@SuppressWarnings("unused")
 			Main main = new Main();
 		}
 	}

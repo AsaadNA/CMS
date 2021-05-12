@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -17,9 +18,6 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-
-//TODO: Instead of creating a new window for the add blocks etc why dont we just change the scene and add a cancel button to it
-//TODO: ADD an AM and PM Column in TimeStamp table
 
 public class ManageBlocksController implements Initializable {
 	
@@ -60,16 +58,18 @@ public class ManageBlocksController implements Initializable {
 			
 			ArrayList<MovieDS> movieList = new ArrayList<MovieDS>();
 			BlockDS newData = new BlockDS();
-			String query2 = "select movietitle,movierating,movieduration,timestamp from movie,movieblock,timestamps,movieblocktime where movieblocktime.blockid = movieblock.blockid and movieblocktime.timestampid = timestamps.timestampid and movieblocktime.movieid = movie.movieid and movieblock.block ="+"'" + result1.getString(1) + "' order by timestamp";
+			String query2 = "select movietitle,movierating,movieduration,to_char(timestampdatetime," + "'" + "yyyy/mm/dd hh12:mi')"+ " from movie,movieblock,timestamps,movieblocktime where movieblocktime.blockid = movieblock.blockid and movieblocktime.timestampid = timestamps.timestampid and movieblocktime.movieid = movie.movieid and movieblock.block ="+"'" + result1.getString(1) + "' order by timestampdatetime";
 			ResultSet result2 = sql.executeQuery(query2);
 			while(result2.next()) {
 				
 				String movieTitle = result2.getString(1);
 				float movieRating = result2.getFloat(2);
 				int movieduration = result2.getInt(3);
-				int timestamp = result2.getInt(4);
+				//int timestamp = result2.getInt(4);
 				
-				movieList.add(new MovieDS(movieTitle,movieRating,movieduration,timestamp));
+				String moviedate = result2.getString(4);
+				
+				movieList.add(new MovieDS(movieTitle,movieRating,movieduration,moviedate));
 			} 
 			
 			newData.block = result1.getString(1);

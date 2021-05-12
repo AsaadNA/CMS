@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
@@ -19,7 +21,18 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.NotFoundException;
+import com.google.zxing.WriterException;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 /*
  * This is basically the scene where u book the seats
  * 
@@ -56,7 +69,7 @@ public class bookTickets_2Controller implements Initializable {
 	
 	//Passed via bookTickets_1Controller parameter
 	public String block,movie;
-	public int timeslot;
+	public String moviedatetime;
 	
 	//
 	private ArrayList<SeatButton> seats = new ArrayList<SeatButton>();
@@ -64,6 +77,8 @@ public class bookTickets_2Controller implements Initializable {
 	
 	int MovieBlockTimeID = 0;
 
+	public CashierController ccInst; // given to us by the controller params in book_1Controller
+	
 	//System.out.println("Status: " + seat.isSelected + " | " +"R: " + seat.row  + " | C: " + seat.column + " | Seat Type : " + seat.seatType);
 	//On book now ask for the client info and search his/her credentials using db
 	public void onBookNowClick(ActionEvent e) {
@@ -96,7 +111,7 @@ public class bookTickets_2Controller implements Initializable {
 	}
 	
 	//This will process the transaction
-	public void processTransaction(int clientID) throws SQLException {
+	public void processTransaction(int clientID) throws SQLException, IOException, WriterException {
 		
 		if(clientID != -1 || clientID != 0) {
 			
@@ -111,7 +126,7 @@ public class bookTickets_2Controller implements Initializable {
 			while(result.next()) { blockID = result.getInt(1); }
 			result = LoginController.getSQL().executeQuery("SELECT movieid from movie where movietitle='"+movie+"'");
 			while(result.next()) { movieID = result.getInt(1); }
-			result = LoginController.getSQL().executeQuery("SELECT timestampid from timestamps where timestamp="+timeslot);
+			result = LoginController.getSQL().executeQuery("SELECT timestampid from timestamps where timestampdatetime=TO_DATE('"+moviedatetime+"','"+"yyyy/mm/dd hh12:mi')");
 			while(result.next()) { timestampID = result.getInt(1); }
 			result = LoginController.getSQL().executeQuery("SELECT movieblocktimeid from movieblocktime where blockid="+blockID+" and movieid=" + movieID + " and timestampid="+timestampID);
 			while(result.next()) { MovieBlockTimeID = result.getInt(1); }
@@ -135,11 +150,17 @@ public class bookTickets_2Controller implements Initializable {
 			while(result.next()) { cashierID = result.getInt(1); }
 
 			//Inserting to payments table
-			String query = "INSERT INTO PAYMENT (PAYMENTAMOUNT,PAYMENTTICKETCOUNT,CLIENTID,CASHIERID,MOVIEBLOCKTIMEID) VALUES (" +
-					paymentAmount + "," + ticketCount + "," + clientID + "," + cashierID + "," + MovieBlockTimeID + ")";
+			
+			//Getting current datetime
+			 DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd hh:mm");  //hh -> 12 hour fromat .. HH -> 24 hour format
+			 LocalDateTime now = LocalDateTime.now();  
+			 String currentDateTime = dtf.format(now);  	
+				    	
+			String query = "INSERT INTO PAYMENT (PAYMENTAMOUNT,PAYMENTTICKETCOUNT,CLIENTID,CASHIERID,MOVIEBLOCKTIMEID,PAYMENTTIMESTAMP) VALUES (" +
+					paymentAmount + "," + ticketCount + "," + clientID + "," + cashierID + "," + MovieBlockTimeID + ",TO_DATE('" + currentDateTime + "','yyyy/mm/dd hh12:mi'" +"))";
 			//System.out.println("Inserted Payment");
 			LoginController.getSQL().executeQuery(query);
-			
+			//System.out.println(query);
 			
 			int paymentID = 0;
 
@@ -169,20 +190,57 @@ public class bookTickets_2Controller implements Initializable {
 						+ row + "," + column + "," + seatTypeID + "," + MovieBlockTimeID + "," + clientID + ")";
 
 				LoginController.getSQL().executeQuery(query);
-			
+			  
 				//Insert ticket
 				int seatID = 0;
 				query = "SELECT seatid from seat where MOVIEBLOCKTIMEID=" + MovieBlockTimeID + " and clientID=" + clientID + " and seatrow=" + seat.row + " and seatcolumn="+seat.column + " and typeid="+seatTypeID;
 				result = LoginController.getSQL().executeQuery(query);
 				while(result.next()) { seatID = result.getInt(1); }
 				
-				query = "INSERT INTO ticket (clientID,paymentID,cashierID,movieblocktimeid,seatID) values (" + 
-						clientID + "," + paymentID + "," + cashierID + "," +MovieBlockTimeID + "," + seatID + ")";
+				//////////////// GENERATE QR CODE FOR TICKETS ///////////
+				
+				// The data that the QR code will contain
+		        String data = "Block: " + block+ "\nMovietime: " + moviedatetime + "\nMovie: " + movie + "\nPaymentID: " + paymentID + "\nSeatID: " + seatID + "\nSeat Row: " + seat.row + "\n Seat Column: " + seat.column + "\n Seat Type: " + seat.seatType;
+		 
+		        // The path where the image will get saved
+		        String QRpath = "localstorage/PaymentID " + paymentID + "( " + i + " ).png";
+		 
+		        // Encoding charset
+		        String charset = "UTF-8";
+		 
+		        Map<EncodeHintType, ErrorCorrectionLevel> hashMap
+		            = new HashMap<EncodeHintType,
+		                          ErrorCorrectionLevel>();
+		 
+		        hashMap.put(EncodeHintType.ERROR_CORRECTION,
+		                    ErrorCorrectionLevel.L);
+		 
+		        // Create the QR code and save
+		        // in the specified folder
+		        // as a jpg file
+		        createQR(data, QRpath, charset, hashMap, 200, 200);
+		        System.out.println("QR Code Generated!!! ");
+				
+				///////////////////////////////////////////
+		      
+				
+				query = "INSERT INTO ticket (clientID,paymentID,cashierID,movieblocktimeid,seatID,ticketQR) values (" + 
+						clientID + "," + paymentID + "," + cashierID + "," +MovieBlockTimeID + "," + seatID + ",'" + QRpath + "')";
+				System.out.println(query);
 				LoginController.getSQL().executeQuery(query);
 
 			} 
 			
 			showInfo("Transaction Completed !");
+			
+			//Then here we want to go back to bookTickets_1 FXML
+			
+			FXMLLoader fxmlLoader = null;
+			fxmlLoader = new FXMLLoader(getClass().getResource("bookTickets_1.fxml"));
+			bookTickets_1Controller controller = new bookTickets_1Controller();
+			fxmlLoader.setController(controller); 
+			controller.ccInst = ccInst; //this should come first before setting borderpane
+			ccInst.borderPane.setCenter(fxmlLoader.load());
 		} 
 		
 		else {
@@ -192,6 +250,23 @@ public class bookTickets_2Controller implements Initializable {
 		seats.clear();
 		selected_seats.clear();
 
+	}
+	
+	// Function to create the QR code
+	public static void createQR(String data, String path,
+			String charset, Map hashMap,
+			int height, int width)
+					throws WriterException, IOException
+	{
+
+		BitMatrix matrix = new MultiFormatWriter().encode(
+				new String(data.getBytes(charset), charset),
+				BarcodeFormat.QR_CODE, width, height);
+
+		MatrixToImageWriter.writeToFile(
+				matrix,
+				path.substring(path.lastIndexOf('.') + 1),
+				new File(path));
 	}
 
 	private void showError(String text) {
@@ -205,7 +280,7 @@ public class bookTickets_2Controller implements Initializable {
 	}
 	
 	//Purchase button
-	public void onPurchaseSubmit(ActionEvent e) throws SQLException, IOException {
+	public void onPurchaseSubmit(ActionEvent e) throws SQLException, IOException, WriterException {
 		
 		//NOTE: We can't have duplicate first name and contact in the database for now
 		
@@ -225,7 +300,6 @@ public class bookTickets_2Controller implements Initializable {
 				result = LoginController.getSQL().executeQuery(query); //lifetime runs out that's why we query again
 				while(result.next()) { clientID = result.getInt(1);  }
 				processTransaction(clientID);
-				showInfo("Transaction Completed");
 			}				
 		} 
 		
@@ -339,7 +413,7 @@ public class bookTickets_2Controller implements Initializable {
 		
 		block_label.setText(block);
 		movie_label.setText(movie);
-		timeslot_label.setText(Integer.toString(timeslot));
+		timeslot_label.setText(moviedatetime);
 
 		//get ID of movieblocktime with ID of block,movie,timeslot
 		int blockID = 0;
@@ -353,7 +427,7 @@ public class bookTickets_2Controller implements Initializable {
 			while(result.next()) { blockID = result.getInt(1); }
 			result = LoginController.getSQL().executeQuery("SELECT movieid from movie where movietitle='"+movie+"'");
 			while(result.next()) { movieID = result.getInt(1); }
-			result = LoginController.getSQL().executeQuery("SELECT timestampid from timestamps where timestamp="+timeslot);
+			result = LoginController.getSQL().executeQuery("SELECT timestampid from timestamps where timestampdatetime=TO_DATE('"+moviedatetime+"','"+"yyyy/mm/dd hh12:mi')");
 			while(result.next()) { timestampID = result.getInt(1); }
 			result = LoginController.getSQL().executeQuery("SELECT movieblocktimeid from movieblocktime where blockid="+blockID+" and movieid=" + movieID + " and timestampid="+timestampID);
 			while(result.next()) { MovieBlockTimeID = result.getInt(1); }

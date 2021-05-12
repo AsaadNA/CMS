@@ -32,7 +32,7 @@ public class AddBlocksController implements Initializable {
 	
 	private HashMap<String,Integer> block_hashMap = new HashMap<String,Integer>(); //block, blockid
 	private HashMap<String,Integer> movie_hashMap = new HashMap<String,Integer>(); //movietitle,movieid
-	private HashMap<Integer,Integer> timestamp_hashMap = new HashMap<Integer,Integer>(); //timestamp,timestampID
+	private HashMap<String,Integer> timestamp_hashMap = new HashMap<String,Integer>(); //timestamp,timestampID
 
 	ArrayList<String> resultListTIME = new ArrayList<String>();
 
@@ -55,10 +55,10 @@ public class AddBlocksController implements Initializable {
 	
 	//This will update time slot combo box with unslotted time for a specific block from the movieblocktime table
 	private void updateTimeComboBox(String block) throws SQLException {
-		String query = "select timestamp from movie,movieblock,timestamps,movieblocktime where movieblocktime.blockid = movieblock.blockid and movieblocktime.timestampid = timestamps.timestampid and movieblocktime.movieid = movie.movieid and movieblock.block ="+"'" + block + "'";
+		String query = "select " + "to_char(timestampdatetime," + "'" + "yyyy/mm/dd hh12:mi')" + " from movie,movieblock,timestamps,movieblocktime where movieblocktime.blockid = movieblock.blockid and movieblocktime.timestampid = timestamps.timestampid and movieblocktime.movieid = movie.movieid and movieblock.block ="+"'" + block + "'";
 		ResultSet result = LoginController.getSQL().executeQuery(query);
 		while(result.next()) {
-			resultListTIME.remove(Integer.toString(result.getInt(1)));
+			resultListTIME.remove(result.getString(1));
 		} timeBox.setItems(FXCollections.observableArrayList(resultListTIME));
 	}
 	
@@ -68,7 +68,7 @@ public class AddBlocksController implements Initializable {
 		String movie = movieBox.getValue().toString();
 		String block = blockBox.getValue().toString();
 		
-		Integer timeID = timestamp_hashMap.get(Integer.parseInt(time));
+		Integer timeID = timestamp_hashMap.get(time);
 		Integer movieID = movie_hashMap.get(movie);
 		Integer blockID = block_hashMap.get(block);
 		
@@ -133,11 +133,11 @@ public class AddBlocksController implements Initializable {
 		
 		/* POPULATING TIME */
 		
-		result = LoginController.getSQL().executeQuery("SELECT timestampid, timestamp from TIMESTAMPS");
+		result = LoginController.getSQL().executeQuery("SELECT timestampid," + "to_char(timestampdatetime," + "'" + "yyyy/mm/dd hh12:mi')" +  " from TIMESTAMPS");
 		try {
 			while(result.next()) {
-				resultListTIME.add(Integer.toString(result.getInt(2)));
-				timestamp_hashMap.put(result.getInt(2),result.getInt(1));
+				resultListTIME.add(result.getString(2));
+				timestamp_hashMap.put(result.getString(2),result.getInt(1));
 			}
 		} catch(SQLException e) {
 			e.printStackTrace();

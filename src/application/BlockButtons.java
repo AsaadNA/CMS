@@ -16,13 +16,15 @@ class MovieDS {
 	
 	String movieTitle;
 	float movieRating;
-	int movieDuration,movieTimeStamp;
+	int movieDuration;
 	
-	public MovieDS(String movieTitle,float movieRating,int movieDuration,int movieTimeStamp) {
+	String moviedatetime;
+	
+	public MovieDS(String movieTitle,float movieRating,int movieDuration,String moviedatetime) {
 		this.movieTitle = movieTitle;
 		this.movieRating = movieRating;
 		this.movieDuration = movieDuration;
-		this.movieTimeStamp = movieTimeStamp;
+		this.moviedatetime = moviedatetime;
 	}
 }
 
@@ -57,7 +59,7 @@ public class BlockButtons extends Button {
 		
 		String toolTipText = "Block: " + info.block + "\n";
 		for(int i = 0; i <= info.scheduledMovies.size()-1; i++) {
-			toolTipText += "------ Time Slot " + " : " + info.scheduledMovies.get(i).movieTimeStamp + " ------\n";
+			toolTipText += "------ " + info.scheduledMovies.get(i).moviedatetime + " ------\n";
 			toolTipText += "Movie " + " : " + info.scheduledMovies.get(i).movieTitle + "\n";
 		}
 		
