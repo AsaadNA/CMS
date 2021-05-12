@@ -190,7 +190,7 @@ public class bookTickets_1Controller implements Initializable {
 		scroller.setFitToWidth(true);
 		scroller.setLayoutX(66);
 		scroller.setLayoutY(82);
-		scroller.setStyle("-fx-background-color: #292929");
+		scroller.setStyle("-fx-background: rgb(41,41,41); -fx-padding:0;");
 		scroller.setPrefSize(768, 513);
 		scroller.setVbarPolicy(ScrollBarPolicy.NEVER);
 

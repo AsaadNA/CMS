@@ -1,5 +1,6 @@
 package application;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
@@ -144,13 +145,25 @@ class CustomComponentManageTicketOne extends AnchorPane {
 						
 				//first delete tickets
 				LoginController.getSQL().executeQuery("DELETE FROM ticket where paymentid="+paymentID);
+				
 				//second delete seats
 				for(int i = 0; i <= seatIDs.size()-1; i++) { 
 					LoginController.getSQL().executeQuery("DELETE FROM seat where seatid=" + seatIDs.get(i));
+					
+					//Physical storage of the barcode in the localstorage
+			        String QRpath = "localstorage/" + paymentID + "-" + seatIDs.get(i) + ".png";
+					File myObj = new File(QRpath); 
+				    if (myObj.delete()) { 
+				      //System.out.println("Deleted the file: " + myObj.getName());
+				    } else {
+				      //System.out.println("Failed to delete the file.");
+				    } 
+					
 				} seatIDs.clear();
+				
 				//third the payment
 				LoginController.getSQL().executeQuery("DELETE FROM PAYMENT where paymentId="+paymentID);
-				
+								
 				Alert alter = new Alert(AlertType.INFORMATION,"Payment refuned !");
 				alter.showAndWait();
 				
@@ -235,10 +248,13 @@ public class ManagePayments1_Controller implements Initializable {
 		content.setStyle("-fx-background-color: #292929");
 		content.setSpacing(6);
 		ScrollPane scroller = new ScrollPane(content);
-		scroller.setFitToWidth(true);
 		scroller.setLayoutX(66);
 		scroller.setLayoutY(86);
-		scroller.setStyle("-fx-background-color: #292929");
+		
+		scroller.setStyle("-fx-background: rgb(41,41,41); -fx-padding:0;");
+		scroller.setFitToHeight(true);
+		scroller.setFitToWidth(true);
+		
 		scroller.setPrefSize(768, 513);
 		scroller.setVbarPolicy(ScrollBarPolicy.NEVER);
 		

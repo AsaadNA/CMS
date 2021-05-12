@@ -15,9 +15,11 @@ import javax.imageio.ImageIO;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -140,12 +142,14 @@ class CustomComponentManageTicketTwo extends AnchorPane {
 				//export the new image
 				try {
 					ImageIO.write(newimg,"png",new File("localstorage_printtickets/" + Integer.toString(paymentID) + " (" + seatrow + "," + seatcolumn +").png"));
-					System.out.println("Generated ticket");
+					//System.out.println("Generated ticket");
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 				
+				Alert alter = new Alert(AlertType.INFORMATION,"Generated ticket !");
+				alter.showAndWait();
 			}
 			
 		}); 
@@ -171,7 +175,7 @@ public class ManagePayments2_Controller implements Initializable {
 		scroller.setFitToWidth(true);
 		scroller.setLayoutX(66);
 		scroller.setLayoutY(38);
-		scroller.setStyle("-fx-background-color: #292929");
+		scroller.setStyle("-fx-background: rgb(41,41,41); -fx-padding:0;");
 		scroller.setPrefSize(768, 513);
 		scroller.setVbarPolicy(ScrollBarPolicy.NEVER);
 		

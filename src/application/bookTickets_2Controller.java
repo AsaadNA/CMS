@@ -203,7 +203,7 @@ public class bookTickets_2Controller implements Initializable {
 		        String data = "Block: " + block+ "\nMovietime: " + moviedatetime + "\nMovie: " + movie + "\nPaymentID: " + paymentID + "\nSeatID: " + seatID + "\nSeat Row: " + seat.row + "\n Seat Column: " + seat.column + "\n Seat Type: " + seat.seatType;
 		 
 		        // The path where the image will get saved
-		        String QRpath = "localstorage/PaymentID " + paymentID + "( " + i + " ).png";
+		        String QRpath = "localstorage/" + paymentID + "-" + seatID + ".png";
 		 
 		        // Encoding charset
 		        String charset = "UTF-8";
@@ -219,14 +219,14 @@ public class bookTickets_2Controller implements Initializable {
 		        // in the specified folder
 		        // as a jpg file
 		        createQR(data, QRpath, charset, hashMap, 200, 200);
-		        System.out.println("QR Code Generated!!! ");
+		        //System.out.println("QR Code Generated!!! ");
 				
 				///////////////////////////////////////////
 		      
 				
 				query = "INSERT INTO ticket (clientID,paymentID,cashierID,movieblocktimeid,seatID,ticketQR) values (" + 
 						clientID + "," + paymentID + "," + cashierID + "," +MovieBlockTimeID + "," + seatID + ",'" + QRpath + "')";
-				System.out.println(query);
+				//System.out.println(query);
 				LoginController.getSQL().executeQuery(query);
 
 			} 
@@ -253,20 +253,10 @@ public class bookTickets_2Controller implements Initializable {
 	}
 	
 	// Function to create the QR code
-	public static void createQR(String data, String path,
-			String charset, Map hashMap,
-			int height, int width)
-					throws WriterException, IOException
-	{
-
-		BitMatrix matrix = new MultiFormatWriter().encode(
-				new String(data.getBytes(charset), charset),
-				BarcodeFormat.QR_CODE, width, height);
-
-		MatrixToImageWriter.writeToFile(
-				matrix,
-				path.substring(path.lastIndexOf('.') + 1),
-				new File(path));
+	@SuppressWarnings("deprecation")
+	public static void createQR(String data, String path,String charset, Map hashMap,int height, int width) throws WriterException, IOException {
+		BitMatrix matrix = new MultiFormatWriter().encode(new String(data.getBytes(charset), charset),BarcodeFormat.QR_CODE, width, height);
+		MatrixToImageWriter.writeToFile(matrix,path.substring(path.lastIndexOf('.') + 1),new File(path));
 	}
 
 	private void showError(String text) {
@@ -306,29 +296,33 @@ public class bookTickets_2Controller implements Initializable {
 		//new user
 		else {
 			
-			String clientfirstname = firstName_textField.getText().toString();
-			String clientphonenumber = phoneNumber_textField.getText().toString();
-			String clientemail = email_textField.getText();
-
-			//if it's old it still maybe that user is not there or inserted so we check
-			String query = "SELECT clientID from client where (clientfirstname='" + clientfirstname + "' and clientphone=" + clientphonenumber + ") or clientphone=" + clientphonenumber + " or clientemail='" + clientemail + "'";
-			ResultSet result = LoginController.getSQL().executeQuery(query);
-			if(result.next()) { //user already exists
-				showError("Key Value Already Exists");
+			if(firstName_textField.getText().equals("") || phoneNumber_textField.getText().equals("") || lastName_textField.getText().equals("") || email_textField.getText().equals("")) {
+				showError("Fill the other fields");
 			} else {
-				
-				String clientlastname = lastName_textField.getText();
+				String clientfirstname = firstName_textField.getText().toString();
+				String clientphonenumber = phoneNumber_textField.getText().toString();
+				String clientemail = email_textField.getText();
 
-				query = "INSERT INTO CLIENT (clientfirstname,clientlastname,clientphone,clientemail) values "
-						+ "('"+clientfirstname+"','"+clientlastname+"',"+clientphonenumber+",'"+clientemail+"')";
-				LoginController.getSQL().executeQuery(query);
+				//if it's old it still maybe that user is not there or inserted so we check
+				String query = "SELECT clientID from client where (clientfirstname='" + clientfirstname + "' and clientphone=" + clientphonenumber + ") or clientphone=" + clientphonenumber + " or clientemail='" + clientemail + "'";
+				ResultSet result = LoginController.getSQL().executeQuery(query);
+				if(result.next()) { //user already exists
+					showError("Key Value Already Exists");
+				} else {
+					
+					String clientlastname = lastName_textField.getText();
 
-				//Get the clientID
-				result = LoginController.getSQL().executeQuery("SELECT clientid from client where clientfirstname='"+clientfirstname+"'" +  " and clientPhone="+clientphonenumber);
-				while(result.next()) { clientID = result.getInt(1); }
-							
-				processTransaction(clientID);
-			}				
+					query = "INSERT INTO CLIENT (clientfirstname,clientlastname,clientphone,clientemail) values "
+							+ "('"+clientfirstname+"','"+clientlastname+"',"+clientphonenumber+",'"+clientemail+"')";
+					LoginController.getSQL().executeQuery(query);
+
+					//Get the clientID
+					result = LoginController.getSQL().executeQuery("SELECT clientid from client where clientfirstname='"+clientfirstname+"'" +  " and clientPhone="+clientphonenumber);
+					while(result.next()) { clientID = result.getInt(1); }
+								
+					processTransaction(clientID);
+				}				
+			}
 		} 
 				
 	}
