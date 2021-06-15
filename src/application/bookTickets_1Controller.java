@@ -68,7 +68,7 @@ class CustomComponentBookTicketOne extends AnchorPane {
 		Label timeslotLabel = createLabel("Timeslot : " + moviedatetime,42,26+28+5+30+3);
 		seatsLeftLabel = createLabel("Seats Left : " + Integer.toString(seatsLeft),300,26+28+5+30+3);
 		
-		Button button = new Button("Purchase Tickets");
+		Button button = new Button("Book Tickets");
 		button.setStyle("-fx-background-color: #88e327");
 		button.setFont(new Font("System",15));
 		button.setLayoutX(539);

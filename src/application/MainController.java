@@ -49,13 +49,13 @@ public class MainController implements Initializable {
 		} borderPane.setCenter(manageBlocks);
 	}
 	
-	public void onManageMoviesClick(ActionEvent e) {
-		Pane manageMovies = null;
-		try {
-			manageMovies = getPane("ManageMovies.fxml");
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		} borderPane.setCenter(manageMovies);
+	//This will handle managing moveis
+	public void onManageMoviesClick(ActionEvent e) throws IOException {
+		FXMLLoader fxmlLoader = null;
+		fxmlLoader = new FXMLLoader(getClass().getResource("ManageMovies.fxml"));
+		ManageMoviesController controller = new ManageMoviesController();
+		fxmlLoader.setController(controller);
+		borderPane.setCenter(fxmlLoader.load());
 	}
 
 	public void onLogoutClick(ActionEvent e) {

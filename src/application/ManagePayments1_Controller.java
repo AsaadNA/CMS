@@ -28,8 +28,8 @@ import javafx.scene.text.Font;
 
 class CustomComponentManageTicketOne extends AnchorPane {
 	
-	public String movietitle,block,clientfirstname,clientlastname,clienphone,clientemail,moviedatetime,paymenttimestamp;
-	public int paymentamount,ticketcount;	
+	private String movietitle,block,clientfirstname,clientlastname,clienphone,clientemail,moviedatetime,paymenttimestamp;
+	private  int paymentamount,ticketcount;	
 	
 	public int paymentID = 0;
 		
@@ -121,7 +121,6 @@ class CustomComponentManageTicketOne extends AnchorPane {
 					System.out.println("Couuld not load fxml ManagePayments2 Controller");
 					e1.printStackTrace();
 				}	
-				
 			}
 			
 		}); 
@@ -167,7 +166,12 @@ class CustomComponentManageTicketOne extends AnchorPane {
 				Alert alter = new Alert(AlertType.INFORMATION,"Payment refuned !");
 				alter.showAndWait();
 				
-				ManagePayments1_Controller.reload();
+				try {
+					ManagePayments1_Controller.reload();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		});
 	}
@@ -188,8 +192,18 @@ public class ManagePayments1_Controller implements Initializable {
 	//On search click
 	public void onSearchButtonClick(ActionEvent e) throws SQLException {
 		String clientphoneText = searchTextfield.getText();
-		String query = "select block,clientfirstname,clientlastname,clientphone,clientemail,paymentticketcount,paymentamount,movietitle,to_char(timestampdatetime,'yyyy/mm/dd hh12:mi'),to_char(paymenttimestamp,'yyyy/mm/dd hh12:mi'),paymentid from client inner join payment on payment.clientid = client.clientid inner join movieblocktime on payment.movieblocktimeid = movieblocktime.movieblocktimeid inner join movie on movie.movieid = movieblocktime.movieid inner join timestamps on timestamps.timestampid = movieblocktime.timestampid inner join movieblock on movieblocktime.blockid = movieblock.blockid where client.clientphone="+clientphoneText;
+		
+		int cashierID = -1;
+		String cashierUsername = LoginController.getUser();
+		
+		String query = "SELECT cashierID from CASHIER WHERE cashierUsername='"+cashierUsername+"'";
 		ResultSet result = LoginController.getSQL().executeQuery(query);
+		while(result.next()) {
+			cashierID = result.getInt(1);
+		}
+		
+		query = "select block,clientfirstname,clientlastname,clientphone,clientemail,paymentticketcount,paymentamount,movietitle,to_char(timestampdatetime,'yyyy/mm/dd hh12:mi'),to_char(paymenttimestamp,'yyyy/mm/dd hh12:mi'),paymentid from client inner join payment on payment.clientid = client.clientid inner join movieblocktime on payment.movieblocktimeid = movieblocktime.movieblocktimeid inner join movie on movie.movieid = movieblocktime.movieid inner join timestamps on timestamps.timestampid = movieblocktime.timestampid inner join movieblock on movieblocktime.blockid = movieblock.blockid where client.clientphone="+clientphoneText+" and payment.cashierid="+cashierID;
+		result = LoginController.getSQL().executeQuery(query);
 		if(result.next()) { 
 			content.getChildren().clear();
 			String block = result.getString(1);
@@ -216,10 +230,20 @@ public class ManagePayments1_Controller implements Initializable {
 	}
 	
 	//reload the data
-	public static void reload() {
+	public static void reload() throws SQLException {
 		content.getChildren().clear();
-		String query = "select block,clientfirstname,clientlastname,clientphone,clientemail,paymentticketcount,paymentamount,movietitle,to_char(timestampdatetime,'yyyy/mm/dd hh12:mi'),to_char(paymenttimestamp,'yyyy/mm/dd hh12:mi'),paymentid from client inner join payment on payment.clientid = client.clientid inner join movieblocktime on payment.movieblocktimeid = movieblocktime.movieblocktimeid inner join movie on movie.movieid = movieblocktime.movieid inner join timestamps on timestamps.timestampid = movieblocktime.timestampid inner join movieblock on movieblocktime.blockid = movieblock.blockid";
+		
+		int cashierID = -1;
+		String cashierUsername = LoginController.getUser();
+		
+		String query = "SELECT cashierID from CASHIER WHERE cashierUsername='"+cashierUsername+"'";
 		ResultSet result = LoginController.getSQL().executeQuery(query);
+		while(result.next()) {
+			cashierID = result.getInt(1);
+		}
+		
+		query = "select block,clientfirstname,clientlastname,clientphone,clientemail,paymentticketcount,paymentamount,movietitle,to_char(timestampdatetime,'yyyy/mm/dd hh12:mi'),to_char(paymenttimestamp,'yyyy/mm/dd hh12:mi'),paymentid from client inner join payment on payment.clientid = client.clientid inner join movieblocktime on payment.movieblocktimeid = movieblocktime.movieblocktimeid inner join movie on movie.movieid = movieblocktime.movieid inner join timestamps on timestamps.timestampid = movieblocktime.timestampid inner join movieblock on movieblocktime.blockid = movieblock.blockid inner join cashier on payment.cashierid = cashier.cashierid where payment.cashierid="+cashierID;
+		result = LoginController.getSQL().executeQuery(query);
 		
 		try {
 			while(result.next()) {
@@ -258,7 +282,12 @@ public class ManagePayments1_Controller implements Initializable {
 		scroller.setPrefSize(768, 513);
 		scroller.setVbarPolicy(ScrollBarPolicy.NEVER);
 		
-		reload();
+		try {
+			reload();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		pane.getChildren().add(scroller);
 	}
