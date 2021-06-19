@@ -24,30 +24,10 @@
                      <font>
                         <Font size="18.0" />
                      </font></Button>
-                  <Button contentDisplay="RIGHT" mnemonicParsing="false" prefHeight="60.0" prefWidth="210.0" style="-fx-background-color: #4d4c4c;" text="Manage Timeslots" textFill="WHITE">
+                  <Button contentDisplay="RIGHT" mnemonicParsing="false" onAction="#onManageTimeSlotsClick" prefHeight="60.0" prefWidth="210.0" style="-fx-background-color: #4d4c4c;" text="Manage Timeslots" textFill="WHITE">
                      <font>
                         <Font size="18.0" />
                      </font></Button>
-                  <Button contentDisplay="RIGHT" mnemonicParsing="false" prefHeight="60.0" prefWidth="210.0" style="-fx-background-color: #4d4c4c;" text="Manage Seats/Ticket" textFill="WHITE">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                  </Button>
-                  <Button contentDisplay="RIGHT" mnemonicParsing="false" prefHeight="60.0" prefWidth="210.0" style="-fx-background-color: #4d4c4c;" text="Manage Cashiers" textFill="WHITE">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                  </Button>
-                  <Button contentDisplay="RIGHT" mnemonicParsing="false" prefHeight="60.0" prefWidth="210.0" style="-fx-background-color: #4d4c4c;" text="Manage Users" textFill="WHITE">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                  </Button>
-                  <Button contentDisplay="RIGHT" mnemonicParsing="false" prefHeight="60.0" prefWidth="210.0" style="-fx-background-color: #4d4c4c;" text="Manage Payments" textFill="WHITE">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                  </Button>
                   <Button contentDisplay="RIGHT" mnemonicParsing="false" onAction="#onLogoutClick" prefHeight="60.0" prefWidth="210.0" style="-fx-background-color: #FF0000;" text="Logout" textFill="WHITE">
                      <font>
                         <Font size="18.0" />
@@ -55,7 +35,7 @@
                   </Button>
                </children>
                <padding>
-                  <Insets top="92.0" />
+                  <Insets top="160.0" />
                </padding>
             </VBox>
          </left>

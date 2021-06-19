@@ -57,7 +57,16 @@ public class MainController implements Initializable {
 		fxmlLoader.setController(controller);
 		borderPane.setCenter(fxmlLoader.load());
 	}
-
+	
+	//This will handle the timeslots
+	public void onManageTimeSlotsClick(ActionEvent e) throws IOException {
+		FXMLLoader fxmlLoader = null;
+		fxmlLoader = new FXMLLoader(getClass().getResource("ManageTimeSlots.fxml"));
+		ManageTimeSlotsController controller = new ManageTimeSlotsController();
+		fxmlLoader.setController(controller);
+		borderPane.setCenter(fxmlLoader.load());
+	}
+	
 	public void onLogoutClick(ActionEvent e) {
 		Login.getStage().show();
 		Main.getStage().hide();
